@@ -4,7 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { Box, Grid, Paper, IconButton, InputBase, Divider, Chip } from "@material-ui/core";
+import { Box, Grid, Paper, IconButton, InputBase, Divider, Chip, List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import DirectionsIcon from '@material-ui/icons/Directions';
@@ -15,6 +15,7 @@ import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import VolumeDownIcon from '@material-ui/icons/VolumeDown';
 import VolumeUpIcon from '@material-ui/icons/VolumeUp';
+import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,6 +41,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     speakButton: {
       marginLeft: theme.spacing(3)
+    },
+    suggestList: {
+      backgroundColor:  theme.palette.background.paper,
+      marginTop: theme.spacing(5)
     }
   }),
 );
@@ -50,12 +55,20 @@ const App: React.FC = () => {
   const [data, setData] = useState({ });
   const [keyword, setKeyword] = useState("");
   const [type, setType] = useState("en_vn");
+  const [message, setMessage] = useState(null);
+
   const search = async (inputKeyword: string) => {
-    const ft = await fetch(`https://samuraitruong.github.io/open-vn-en-dict/html/${inputKeyword.toLocaleLowerCase()}.json`);
-    const json = await ft.json();
-    console.log("datasource", json);
-    setType("en_vn")
-    setData(json);
+    try{
+      const ft = await fetch(`https://samuraitruong.github.io/open-vn-en-dict/html/${inputKeyword.toLocaleLowerCase()}.json`);
+      const json = await ft.json();
+      console.log("datasource", json);
+      setType("en_vn")
+      setData(json);
+    }
+    catch{
+      console.log("error loading data");
+      setData({});
+    }
   }
   const dict = (data as any)[type];
   const handleTypeChange = (event: React.MouseEvent<HTMLElement>, newAlignment: string) => {
@@ -74,7 +87,7 @@ const App: React.FC = () => {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Container fixed>
+      <Container fixed style={{paddingBottom: "50px"}}>
         <Typography component="div" variant="body1">
           <Box bgcolor="primary.main" color="primary.contrastText" p={2}>
             Vietnamese - English open dictionary
@@ -120,8 +133,8 @@ const App: React.FC = () => {
               <ToggleButton value="en_en" aria-label="centered">
                 <SwapHorizIcon /> Eng -> Eng &nbsp;
               </ToggleButton>
-              <ToggleButton value="synonym" aria-label="right aligned">
-                <AccountTreeIcon />  Đồng Nghĩa
+              <ToggleButton value="synonyms" aria-label="right aligned">
+                <AccountTreeIcon />  Đồng Thanh
               </ToggleButton>
 
             </ToggleButtonGroup>
@@ -131,6 +144,7 @@ const App: React.FC = () => {
 
         { dict && (
         <Grid>
+          <Grid xs={12} item>
           <Typography variant="h3" component="span">
             {dict.data ? dict.data.word : ""}
           </Typography>
@@ -155,9 +169,24 @@ const App: React.FC = () => {
               label="UK"/>
             </Box>
           <Divider  className={classes.divider}/>
-          <Typography variant="body1" component="body" dangerouslySetInnerHTML={{ __html: dict.data ? dict.data.content : "" }}>
+          <Typography variant="body1" component="article" dangerouslySetInnerHTML={{ __html: dict.data ? dict.data.content : "" }}>
           </Typography>
+          </Grid>
+          {dict.suggests && (
+          <Grid className={classes.suggestList}>
+            <Typography variant="h3" component="h3"> Từ liên quan:
+              </Typography>
+            <List component="nav" className={classes.suggestList} aria-label="contacts">
+              {dict.suggests.map((item: any) => (
+              <ListItem key={item.word} button onClick={() => { setKeyword(item.word); search(item.word)}}>
+                <ListItemIcon>
+                  <LabelImportantIcon />
+                </ListItemIcon>
+                <ListItemText primary={item.word} color="primary" />
+              </ListItem>))}
+            </List>
 
+          </Grid>)}
         </Grid>
         )}
       </Container>
