@@ -20,3 +20,27 @@
 .App-link {
   color: #09d3ac;
 }
+.margin25{
+  margin-left: 25px;
+}
+.m-top15{
+  margin-top: 25px;
+}
+.green  {
+  color: green;
+}
+.color-light-blue{
+  color: #19a7d6;
+}
+.m-top20{
+  margin-top: 20px;
+}
+.bold{
+  font-weight: 500 !important;
+}
+.dot-blue{
+
+}
+.float-right{
+  float: right;
+}
