@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, FormEvent } from 'react';
 import './App.css';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
@@ -55,7 +55,11 @@ const App: React.FC = () => {
   const handleTypeChange = (event: React.MouseEvent<HTMLElement>, newAlignment: string) => {
     setType(newAlignment);
   };
-
+  const handleSubmit = (e: FormEvent) => {
+    search(keyword);
+    e.preventDefault()
+    return  false;
+  }
   return (
     <React.Fragment>
       <CssBaseline />
@@ -67,25 +71,29 @@ const App: React.FC = () => {
         </Typography>
         <Grid container spacing={3} className={classes.container}>
           <Grid item sm={6}>
-            <Paper className={classes.root}>
-              <IconButton className={classes.iconButton} aria-label="menu">
-                <MenuIcon />
-              </IconButton>
-              <InputBase
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-                className={classes.input}
-                placeholder="English -> Vietnamese"
-                inputProps={{ 'aria-label': 'English -> Vietnamese' }}
-              />
-              <IconButton type="submit" className={classes.iconButton} aria-label="search" onClick={() => search(keyword)}>
-                <SearchIcon />
-              </IconButton>
-              <Divider className={classes.divider} orientation="vertical" />
-              <IconButton color="primary" className={classes.iconButton} aria-label="directions">
-                <DirectionsIcon />
-              </IconButton>
-            </Paper>
+            <form onSubmit={handleSubmit}>
+
+              <Paper className={classes.root}>
+                <IconButton className={classes.iconButton} aria-label="menu">
+                  <MenuIcon />
+                </IconButton>
+                <InputBase
+
+                  value={keyword}
+                  onChange={(e) => setKeyword(e.target.value)}
+                  className={classes.input}
+                  placeholder="English -> Vietnamese"
+                  inputProps={{ 'aria-label': 'English -> Vietnamese' }}
+                />
+                <IconButton type="submit" className={classes.iconButton} aria-label="search" onClick={() => search(keyword)}>
+                  <SearchIcon />
+                </IconButton>
+                <Divider className={classes.divider} orientation="vertical" />
+                <IconButton color="primary" className={classes.iconButton} aria-label="directions">
+                  <DirectionsIcon />
+                </IconButton>
+              </Paper>
+            </form>
           </Grid>
           <Grid item sm={6} justify="space-between" alignContent="flex-end" alignItems="flex-end">
             <ToggleButtonGroup
@@ -111,9 +119,13 @@ const App: React.FC = () => {
 
 
         <div>
-          <Typography variant="h1" component="h2">
+          <Typography variant="h4" component="h4">
             {en_vn != null && en_vn.data ? en_vn.data.word : ""}
           </Typography>
+
+          <Typography variant="body1" component="body" dangerouslySetInnerHTML={{ __html: en_vn != null && en_vn.data ? en_vn.data.content : "" }}>
+          </Typography>
+
         </div>
       </Container>
     </React.Fragment >
