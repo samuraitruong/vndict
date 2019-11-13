@@ -20,7 +20,7 @@ export function LinkInterceptor({ html, onLinkClick = () => {} }: {html: string 
         listeners.current = []
       }
     },
-    [html]
+    [html, onLinkClick]
   )
 
   return  <Typography ref={ref} variant="body1" component="body" dangerouslySetInnerHTML={{ __html: html}}></Typography>
