@@ -15,6 +15,7 @@ import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import VolumeDownIcon from '@material-ui/icons/VolumeDown';
 import VolumeUpIcon from '@material-ui/icons/VolumeUp';
+import { LinkInterceptor } from './LinkInterceptor';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -71,6 +72,9 @@ const App: React.FC = () => {
     const audio = new Audio(url);
     audio.play();
   } 
+  if(dict && dict.data && dict.data.content) {
+    dict.data.content = dict.data.content.replace(/find\?type=(\d+)\&amp;query=(.*)/ig,"$2")
+  }
   return (
     <React.Fragment>
       <CssBaseline />
@@ -155,8 +159,18 @@ const App: React.FC = () => {
               label="UK"/>
             </Box>
           <Divider  className={classes.divider}/>
-          <Typography variant="body1" component="body" dangerouslySetInnerHTML={{ __html: dict.data ? dict.data.content : "" }}>
-          </Typography>
+          <LinkInterceptor
+          html={dict.data && dict.data.content}
+    
+          onLinkClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+            console.log(e);
+            e.preventDefault()
+            const arr = e.currentTarget.href.split('/');
+            const word = arr[arr.length -1];
+            setKeyword(word);
+            search(word);
+          }}
+        />,
 
         </Grid>
         )}
