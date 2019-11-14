@@ -1,4 +1,3 @@
-
 language: node_js
 node_js:
   - stable
@@ -8,8 +7,7 @@ script:
 deploy:
   provider: pages
   skip-cleanup: true
-  github-token:
-    secure: "r5o+C2Q5K+l0vo7AP3xrV3QrJnxED30KeQgD5o9+mwo0VduqnKE5rbpoPHLRrGYufU8fMn8Do++cL6Qek1oV4N9kJDmfSHBrg8nPKd4hIYedj4OA0TIjXOdvh81SB9fSHKVmTOjVR9rVsQJpcryd5H2yjNaewRe+ZfYkARjDCVEXolyB9/U6/t8eWpxBSzd7QI2N8oANWv9ygkBwNvbjHSBJVPUHvPtSZvR9q9BD1YMbl7EYA/zHYRZPtidZTW2/mxw3S33ImrXhj6GMkToICVG5JTeFdwZhoe0o9tjs/h59m2405wbBH6UcFuIOli6Wmwsu1CKUH1EFT25eNJJGsYEZpoV8fbUGAK3BFaK22Bs2HzBuoAqLXqQVJzNb3amGSvqYQXcWtJ70zlq5Jjbz+0SP5ApT5/36ZnHeHUzRe3vf6mN1f0rJHn84G+WKsI8dTW2dToD+PdfN+f96za94yEg6hQI+E1UjdZmJvUmxUd4pE3l0V5qUxgbFsuKPx/Ivac7c9jrWZlyZPDuugYDM7nuRlHvuj2+tIGzJIInR74EczNuriZdfqjZkkwxE7S1uPqdKq6YV1HX/1V1Evmj/B/iSeoAO9FpAEHK41kxSx/n64jpsNdSUP2nik8qjr/x+wzWRcEI3xDuE/93ttZhcoro/jRUeqkuzZtL1mZnjrDM="
+  github-token: $GH_TOKEN
   keep-history: true
   on:
     branch: master
