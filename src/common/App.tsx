@@ -76,7 +76,6 @@ const App: React.FC = () => {
         `https://samuraitruong.github.io/open-vn-en-dict/html/${inputKeyword.toLocaleLowerCase()}.json`
       );
       const json = await ft.json();
-      console.log("datasource", json);
       setType("en_vn");
       setData(json);
       setMessage(null)
@@ -94,8 +93,10 @@ const App: React.FC = () => {
     setType(newAlignment);
   };
   const handleSubmit = (e: FormEvent) => {
-    search(keyword);
     e.preventDefault();
+    console.log("aa")
+    search(keyword);
+
     return false;
   };
   const playSound = (word?: string, accent?: "us" | "uk") => {
@@ -131,7 +132,6 @@ const App: React.FC = () => {
                   type="submit"
                   className={classes.iconButton}
                   aria-label="search"
-                  onClick={() => search(keyword)}
                 >
                   <SearchIcon />
                 </IconButton>
@@ -199,7 +199,6 @@ const App: React.FC = () => {
               <LinkInterceptor
                 html={dict.data && dict.data.content}
                 onLinkClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-                  console.log(e);
                   e.preventDefault();
                   const arr = e.currentTarget.href.split("/");
                   const word = arr[arr.length - 1];
