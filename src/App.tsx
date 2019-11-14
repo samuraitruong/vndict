@@ -19,7 +19,6 @@ import {
   AppBar,
   Toolbar,
   SnackbarContent,
-  Button
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
@@ -114,7 +113,7 @@ const App: React.FC = () => {
   };
   if (dict && dict.data && dict.data.content) {
     dict.data.content = dict.data.content.replace(
-      /find\?type=(\d+)\&amp;query=(.*)/gi,
+      /find\?type=(\d+)&amp;query=(.*)/gi,
       "$2"
     );
   }
@@ -258,9 +257,9 @@ const App: React.FC = () => {
         )}
 
         {message && (
-           <SnackbarContent className={classes.snackbar} message={message} action={ <IconButton key="close" aria-label="close" color="inherit" onClick={() => setMessage(null)}>
-           <CloseIcon />
-         </IconButton>} />
+          <SnackbarContent className={classes.snackbar} message={message} action={<IconButton key="close" aria-label="close" color="inherit" onClick={() => setMessage(null)}>
+            <CloseIcon />
+          </IconButton>} />
         )}
       </Container>
     </React.Fragment>
