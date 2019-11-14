@@ -1,25 +1,23 @@
 import React, { useState, FormEvent } from "react";
-import "./App.css";
-import CssBaseline from "@material-ui/core/CssBaseline";
+
+import ThemeProvider from './ThemeProvider'
+import { makeStyles, Theme, createStyles } from "@material-ui/core/styles"
+
+import AppBar from 'components/AppBar'
+import SuggestionList from 'components/SuggestionList'
+
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import {
-  Box,
-  Grid,
-  Paper,
-  IconButton,
-  InputBase,
-  Divider,
-  Chip,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  AppBar,
-  Toolbar,
-  SnackbarContent,
-} from "@material-ui/core";
+
+import Box from "@material-ui/core/Box"
+import Grid from "@material-ui/core/Grid"
+import Paper from "@material-ui/core/Paper"
+import IconButton from "@material-ui/core/IconButton"
+import InputBase from "@material-ui/core/InputBase"
+import Divider from "@material-ui/core/Divider"
+import Chip from "@material-ui/core/Chip"
+import SnackbarContent from "@material-ui/core/SnackbarContent"
+
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import DirectionsIcon from "@material-ui/icons/Directions";
@@ -30,11 +28,9 @@ import SwapHorizIcon from "@material-ui/icons/SwapHoriz";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
 import VolumeDownIcon from "@material-ui/icons/VolumeDown";
 import VolumeUpIcon from "@material-ui/icons/VolumeUp";
-import { LinkInterceptor } from "./LinkInterceptor";
-import LabelImportantIcon from "@material-ui/icons/LabelImportant";
-import MenuBookIcon from '@material-ui/icons/MenuBook';
-
 import CloseIcon from '@material-ui/icons/Close';
+
+import { LinkInterceptor } from "components/LinkInterceptor";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,10 +56,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     speakButton: {
       marginLeft: theme.spacing(3)
-    },
-    suggestList: {
-      backgroundColor: theme.palette.background.paper,
-      marginTop: theme.spacing(5)
     },
     snackbar: {
       backgroundColor: theme.palette.error.dark,
@@ -118,17 +110,9 @@ const App: React.FC = () => {
     );
   }
   return (
-    <React.Fragment>
-      <CssBaseline />
+    <ThemeProvider>
       <Container fixed style={{ paddingBottom: "50px" }}>
-        <AppBar position="static">
-          <Toolbar>
-            <IconButton edge="start" color="inherit" aria-label="menu">
-              <MenuBookIcon />
-            </IconButton>
-            <Typography variant="h6">Vietnamese - English open dictionary</Typography>
-          </Toolbar>
-        </AppBar>
+        <AppBar />
         <Grid container className={classes.container}>
           <Grid item sm={6} xs={12}>
             <form onSubmit={handleSubmit}>
@@ -224,32 +208,12 @@ const App: React.FC = () => {
                 }}
               />
               {dict.suggests && (
-                <Grid className={classes.suggestList}>
-                  <Typography variant="h3" component="h3">
-                    {" "}
-                    Từ liên quan:
-                  </Typography>
-                  <List
-                    component="nav"
-                    className={classes.suggestList}
-                    aria-label="contacts"
-                  >
-                    {dict.suggests.map((item: any) => (
-                      <ListItem
-                        key={item.word}
-                        button
-                        onClick={() => {
-                          setKeyword(item.word);
-                          search(item.word);
-                        }}
-                      >
-                        <ListItemIcon>
-                          <LabelImportantIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={item.word} color="primary" />
-                      </ListItem>
-                    ))}
-                  </List>
+                <Grid>
+                  <SuggestionList
+                    suggests={dict.suggests}
+                    setKeyword={setKeyword}
+                    search={search}
+                  />
                 </Grid>
               )}
             </Grid>
@@ -262,7 +226,7 @@ const App: React.FC = () => {
           </IconButton>} />
         )}
       </Container>
-    </React.Fragment>
+    </ThemeProvider>
   );
 };
 
