@@ -23,5 +23,5 @@ export function LinkInterceptor({ html, onLinkClick = () => { } }: { html: strin
     [html, onLinkClick]
   )
 
-  return <Typography ref={ref} variant="body1" component="body" dangerouslySetInnerHTML={{ __html: html }}></Typography>
+  return <Typography ref={ref} variant="body1" component="article" dangerouslySetInnerHTML={{ __html: html }}></Typography>
 }
