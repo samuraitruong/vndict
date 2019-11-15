@@ -15,16 +15,18 @@ const App: React.FC = () => {
   return (
     <Router basename={process.env.PUBLIC_URL}>
       <ThemeProvider>
-        <Container fixed style={{ paddingBottom: "50px" }}>
+        <Container fixed  className="container-wrapper">
           <AppBar />
+          <Container>
           <Switch>
-          <Route path="/:word">
+            <Route path="/:word">
               <Home />
             </Route>
             <Route path="">
               <Home />
             </Route>
             </Switch>
+            </Container>
         </Container>
       </ThemeProvider>
     </Router>

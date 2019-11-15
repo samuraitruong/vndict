@@ -8,6 +8,7 @@ import ListItem from "@material-ui/core/ListItem"
 import ListItemIcon from "@material-ui/core/ListItemIcon"
 import ListItemText from "@material-ui/core/ListItemText"
 import LabelImportantIcon from "@material-ui/icons/LabelImportant"
+import { Box, Divider } from '@material-ui/core'
 
 interface SuggestionListProps {
   suggests: any[],
@@ -16,17 +17,16 @@ interface SuggestionListProps {
 }
 
 const SuggestionList: React.FC<SuggestionListProps> = ({ suggests, setKeyword, search }) => {
-  const classes = useStyles({})
-
-  return (
-    <>
-      <Typography variant="h3" component="h3">
-        {" "}
+  const classes = useStyles({ successtionBox: {paddingTop: "25px"}})
+ 
+  return suggests && suggests.length >0 && (
+    <Box className= {classes.suggestList}>
+      <Divider/>
+      <Typography variant="h3" component="h5" style={{marginTop:"25px"}}>
         Từ liên quan:
       </Typography>
       <List
         component="nav"
-        className={classes.suggestList}
         aria-label="contacts"
       >
         {suggests.map((item: any) => (
@@ -45,7 +45,7 @@ const SuggestionList: React.FC<SuggestionListProps> = ({ suggests, setKeyword, s
           </ListItem>
         ))}
       </List>
-    </>
+    </Box>
   )
 }
 
