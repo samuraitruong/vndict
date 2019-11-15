@@ -13,20 +13,20 @@ import {
 
 const App: React.FC = () => {
   return (
-    <Router>
-    <ThemeProvider>
-      <Container fixed style={{ paddingBottom: "50px" }}>
-        <AppBar />
-        <Switch>
-        <Route path="/:word">
-            <Home />
-          </Route>
-          <Route path="">
-            <Home />
-          </Route>
-          </Switch>
-      </Container>
-    </ThemeProvider>
+    <Router basename={process.env.PUBLIC_URL}>
+      <ThemeProvider>
+        <Container fixed style={{ paddingBottom: "50px" }}>
+          <AppBar />
+          <Switch>
+          <Route path="/:word">
+              <Home />
+            </Route>
+            <Route path="">
+              <Home />
+            </Route>
+            </Switch>
+        </Container>
+      </ThemeProvider>
     </Router>
   );
 };
