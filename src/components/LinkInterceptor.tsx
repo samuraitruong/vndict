@@ -8,22 +8,24 @@ export interface IInterceptionProps {
 export function LinkInterceptor({ html, onLinkClick, onWordClick }: IInterceptionProps) {
   const ref = useRef(null)
   const listeners = useRef([])
+  const wordDdCLickHandle = () => {
+    let text = "";
+    const doc = document as any;
+
+    if (window.getSelection) {
+      text = window.getSelection().toString();
+    } else if (doc.selection && doc.selection.type !== "Control") {
+      text = doc.selection.createRange().text;
+    }
+    if (text && onWordClick) {
+      onWordClick(text);
+    }
+  }
 
   useEffect(
     () => {
-      ref.current.addEventListener("dblclick", () => {
-        let text = "";
-        const doc = document as any;
-
-        if (window.getSelection) {
-          text = window.getSelection().toString();
-        } else if (doc.selection && doc.selection.type !== "Control") {
-          text = doc.selection.createRange().text;
-        }
-        if (text && onWordClick) {
-          onWordClick(text);
-        }
-      })
+      listeners.current.push(ref.current);
+      ref.current.addEventListener("dblclick", wordDdCLickHandle)
       const links: HTMLElement[] = Array.from(ref.current.querySelectorAll('a'))
       links.forEach(node => {
         node.addEventListener('click', onLinkClick)
@@ -31,9 +33,10 @@ export function LinkInterceptor({ html, onLinkClick, onWordClick }: IInterceptio
       })
 
       return () => {
-        listeners.current.forEach(node =>
-          node.removeEventListener('click', onLinkClick)
-        )
+        listeners.current.forEach(node => {
+          node.removeEventListener('click', onLinkClick);
+          node.removeEventListener('dblclick', wordDdCLickHandle);
+        });
         listeners.current = []
       }
     },
