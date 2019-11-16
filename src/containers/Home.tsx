@@ -78,6 +78,7 @@ const Home: React.FC = () => {
   const [message, setMessage] = useState(null);
   const { word } = useParams();
   const search = useCallback(async (inputKeyword: string) => {
+    if (!inputKeyword) return;
     const { data } = await fetchWord(inputKeyword, sourceId)
     if (data) {
       setType("en_vn");
@@ -140,16 +141,14 @@ const Home: React.FC = () => {
                 <MenuIcon />
               </IconButton>
               <Menu
-                id="simple-menu"
                 anchorEl={anchorEl}
                 keepMounted
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={() => handleClose("html")}>Source 1</MenuItem>
-                <MenuItem onClick={() => handleClose("data")}>Source 2</MenuItem>
+                <MenuItem disabled={sourceId === "html"} onClick={() => handleClose("html")}>Từ điển 1</MenuItem>
+                <MenuItem disabled={sourceId === "data"} onClick={() => handleClose("data")}>Từ điển 2</MenuItem>
               </Menu>
-
               <InputBase
                 value={keyword}
                 onChange={e => setKeyword(e.target.value)}
