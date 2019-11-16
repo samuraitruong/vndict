@@ -50,3 +50,7 @@ code {
 .dict--title {
   display: none;
 }
+
+.float-right {
+  float: right;
+}

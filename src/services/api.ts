@@ -7,9 +7,14 @@ export async function fetchWord(word: string): Promise<IApiResponse<any>> {
   }
   try {
     word = word.toLocaleLowerCase().trim();
-    const response = await fetch(`${constants.RESOURCE_URL}/data/${word}.json`);
-    const json = await response.json();
-    result.data = json;
+    const response = await fetch(`${constants.RESOURCE_URL}/html/${word}.json`);
+    let text = await response.text();
+    text = text.replace(
+      /find\?type=(\d+)&amp;query=([^"]*)/ig,
+      "$2"
+    );
+
+    result.data = JSON.parse(text);
   }
   catch (err) {
     console.log(err);

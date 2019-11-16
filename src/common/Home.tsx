@@ -32,6 +32,7 @@ import { useParams, useHistory } from "react-router";
 import { WordPopup } from "components/WordPopup/WordPopup";
 import { fetchWord } from "services/api";
 import { toProperCase } from "services/util";
+import constants from "../constants";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -106,22 +107,15 @@ const Home: React.FC = () => {
   };
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    console.log("aa")
     search(keyword);
-
     return false;
   };
   const playSound = (word?: string, accent?: "us" | "uk") => {
-    const url = `https://samuraitruong.github.io/open-vn-en-dict/voice/${word.toLocaleLowerCase()}_${accent}.mp3`;
+    const url = `${constants.RESOURCE_URL}/voice/${word.toLocaleLowerCase()}_${accent}.mp3`;
     const audio = new Audio(url);
     audio.play();
   };
-  if (dict && dict.data && dict.data.content) {
-    dict.data.content = dict.data.content.replace(
-      /find\?type=(\d+)&amp;query=(.*)/gi,
-      "$2"
-    );
-  }
+
   return (
     <React.Fragment>
       <Grid container className={classes.container}>
@@ -171,7 +165,7 @@ const Home: React.FC = () => {
               <SwapHorizIcon /> Eng -> Eng &nbsp;
               </ToggleButton>
             <ToggleButton value="synonyms" aria-label="right aligned">
-              <AccountTreeIcon /> Đồng Thanh
+              <AccountTreeIcon /> Đồng Nghĩa
               </ToggleButton>
           </ToggleButtonGroup>
         </Grid>
@@ -184,7 +178,7 @@ const Home: React.FC = () => {
             </Typography>
             <Typography variant="h4" component="span">
               <Box color="grey" component="span">
-                {dict.data ? `(${dict.data.pronounce})` : ""}
+                {dict.data && dict.data.pronounce ? `(${dict.data.pronounce})` : ""}
               </Box>
             </Typography>
             <Box component="span" className="float-right">
