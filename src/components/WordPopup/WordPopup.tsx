@@ -1,0 +1,62 @@
+import {
+  Dialog, AppBar, Toolbar, IconButton, Typography, Button,
+  makeStyles, Theme, createStyles, Slide, Box
+} from "@material-ui/core";
+
+import React from "react";
+
+import CloseIcon from '@material-ui/icons/Close';
+import { TransitionProps } from '@material-ui/core/transitions';
+import { LinkInterceptor } from "components/LinkInterceptor";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    appBar: {
+      position: 'relative',
+    },
+    title: {
+      marginLeft: theme.spacing(2),
+      flex: 1,
+    },
+    innerBox: {
+      padding: theme.spacing(2)
+    }
+  }),
+);
+
+export const WordPopup: React.FC<{ word: any, onClose: () => void }> = ({ word, onClose }) => {
+  const classes = useStyles({});
+  const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
+  const handleClose = () => onClose();
+  if (!word) return null;
+
+  return (
+    <Dialog fullScreen={window.innerWidth < 667} open={word != null} onClose={() => { }} TransitionComponent={Transition}>
+      <AppBar className={classes.appBar}>
+        <Toolbar>
+          <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+            <CloseIcon />
+          </IconButton>
+          <Typography variant="h6" className={classes.title}>
+            {word.word}
+          </Typography>
+          <Button autoFocus color="inherit" onClick={handleClose}>
+            Back
+            </Button>
+        </Toolbar>
+      </AppBar>
+      <Box className={classes.innerBox}>
+        <LinkInterceptor
+          html={word.content}
+          onLinkClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+            e.preventDefault();
+            const arr = e.currentTarget.href.split("/");
+            const word = arr[arr.length - 1];
+            console.log("word", word)
+          }}></LinkInterceptor>
+      </Box>
+    </Dialog>
+  )
+}

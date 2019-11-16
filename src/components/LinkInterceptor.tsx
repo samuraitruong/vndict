@@ -1,12 +1,29 @@
 import React, { useEffect, useRef } from 'react'
 import { Typography } from '@material-ui/core'
-
-export function LinkInterceptor({ html, onLinkClick = () => { } }: { html: string, onLinkClick: (e: any) => void }) {
+export interface IInterceptionProps {
+  html: string;
+  onLinkClick: (e: any) => any;
+  onWordClick?: (e: string) => void;
+}
+export function LinkInterceptor({ html, onLinkClick, onWordClick }: IInterceptionProps) {
   const ref = useRef(null)
   const listeners = useRef([])
 
   useEffect(
     () => {
+      ref.current.addEventListener("dblclick", () => {
+        let text = "";
+        const doc = document as any;
+
+        if (window.getSelection) {
+          text = window.getSelection().toString();
+        } else if (doc.selection && doc.selection.type !== "Control") {
+          text = doc.selection.createRange().text;
+        }
+        if (text && onWordClick) {
+          onWordClick(text);
+        }
+      })
       const links: HTMLElement[] = Array.from(ref.current.querySelectorAll('a'))
       links.forEach(node => {
         node.addEventListener('click', onLinkClick)
@@ -20,7 +37,7 @@ export function LinkInterceptor({ html, onLinkClick = () => { } }: { html: strin
         listeners.current = []
       }
     },
-    [html, onLinkClick]
+    [html, onLinkClick, onWordClick]
   )
 
   return <Typography ref={ref} variant="body1" component="article" dangerouslySetInnerHTML={{ __html: html }}></Typography>
