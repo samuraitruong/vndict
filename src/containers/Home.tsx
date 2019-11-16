@@ -33,6 +33,7 @@ import { WordPopup } from "components/WordPopup/WordPopup";
 import { fetchWord } from "services/api";
 import { toProperCase } from "services/util";
 import constants from "../constants";
+import { Menu, MenuItem } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -66,16 +67,18 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Home: React.FC = () => {
+  const source = localStorage.getItem("SOURCE_ID") || "html";
   let history = useHistory();
   const classes = useStyles({});
-  const [data, setData] = useState({});
+  const [sourceId, setSourceId] = useState(source);
+  const [data, setData] = useState();
   const [popupWord, setPopupWord] = useState(null);
   const [keyword, setKeyword] = useState("");
   const [type, setType] = useState("en_vn");
   const [message, setMessage] = useState(null);
   const { word } = useParams();
   const search = useCallback(async (inputKeyword: string) => {
-    const { data } = await fetchWord(inputKeyword)
+    const { data } = await fetchWord(inputKeyword, sourceId)
     if (data) {
       setType("en_vn");
       setData(data);
@@ -86,9 +89,9 @@ const Home: React.FC = () => {
       setData({});
       setMessage("Xin lỗi, từ bạn tìm kiếm không tồn tại hoặc chưa được cập nhật")
     }
-  }, [history]);
+  }, [history, sourceId]);
   const onWordClick = async (clickedWord: string) => {
-    const response = await fetchWord(clickedWord);
+    const response = await fetchWord(clickedWord, sourceId);
     if (response.data && response.data.en_vn && response.data.en_vn.data) {
       setPopupWord(response.data.en_vn.data)
     }
@@ -98,7 +101,7 @@ const Home: React.FC = () => {
     search(word);
   }, [word, search])
 
-  const dict = (data as any)[type];
+  const dict = data && (data as any)[type];
   const handleTypeChange = (
     event: React.MouseEvent<HTMLElement>,
     newAlignment: string
@@ -115,16 +118,38 @@ const Home: React.FC = () => {
     const audio = new Audio(url);
     audio.play();
   };
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
+  const handleSourceMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = (value?: string) => {
+    if (value) {
+      localStorage.setItem("SOURCE_ID", value);
+      setSourceId(value)
+    }
+    setAnchorEl(null);
+  };
   return (
     <React.Fragment>
       <Grid container className={classes.container}>
         <Grid item sm={6} xs={12}>
           <form onSubmit={handleSubmit}>
             <Paper className={classes.root}>
-              <IconButton className={classes.iconButton} aria-label="menu">
+              <IconButton className={classes.iconButton} aria-label="menu" onClick={handleSourceMenuClick} >
                 <MenuIcon />
               </IconButton>
+              <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={() => handleClose("html")}>Source 1</MenuItem>
+                <MenuItem onClick={() => handleClose("data")}>Source 2</MenuItem>
+              </Menu>
+
               <InputBase
                 value={keyword}
                 onChange={e => setKeyword(e.target.value)}
@@ -170,6 +195,7 @@ const Home: React.FC = () => {
           </ToggleButtonGroup>
         </Grid>
       </Grid>
+
       {dict && (
         <Grid>
           <Grid xs={12} item>

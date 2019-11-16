@@ -1,7 +1,7 @@
 import React from "react";
 import ThemeProvider from './ThemeProvider'
 import AppBar from 'components/AppBar'
-import Home from "common/Home"
+import Home from "containers/Home"
 import Container from "@material-ui/core/Container";
 
 import {
