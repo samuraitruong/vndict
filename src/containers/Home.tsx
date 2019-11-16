@@ -124,7 +124,7 @@ const Home: React.FC = () => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = (value?: string) => {
-    if (value) {
+    if (constants.DATA_SOURCE_ID.some(x => x=== value)) {
       localStorage.setItem("SOURCE_ID", value);
       setSourceId(value)
     }
