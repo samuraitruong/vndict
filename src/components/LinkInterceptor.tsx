@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useCallback } from 'react'
 import { Typography } from '@material-ui/core'
 export interface IInterceptionProps {
   html: string;
@@ -8,7 +8,7 @@ export interface IInterceptionProps {
 export function LinkInterceptor({ html, onLinkClick, onWordClick }: IInterceptionProps) {
   const ref = useRef(null)
   const listeners = useRef([])
-  const wordDdCLickHandle = () => {
+  const wordDdCLickHandle = useCallback(() => {
     let text = "";
     const doc = document as any;
 
@@ -20,7 +20,7 @@ export function LinkInterceptor({ html, onLinkClick, onWordClick }: IInterceptio
     if (text && onWordClick) {
       onWordClick(text);
     }
-  }
+  }, [onWordClick]);
 
   useEffect(
     () => {
@@ -40,7 +40,7 @@ export function LinkInterceptor({ html, onLinkClick, onWordClick }: IInterceptio
         listeners.current = []
       }
     },
-    [html, onLinkClick, onWordClick]
+    [html, onLinkClick, onWordClick, wordDdCLickHandle]
   )
 
   return <Typography ref={ref} variant="body1" component="article" dangerouslySetInnerHTML={{ __html: html }}></Typography>
