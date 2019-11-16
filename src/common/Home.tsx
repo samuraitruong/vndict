@@ -31,6 +31,7 @@ import { LinkInterceptor } from "components/LinkInterceptor";
 import { useParams, useHistory } from "react-router";
 import { WordPopup } from "components/WordPopup/WordPopup";
 import { fetchWord } from "services/api";
+import { toProperCase } from "services/util";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -179,7 +180,7 @@ const Home: React.FC = () => {
         <Grid>
           <Grid xs={12} item>
             <Typography variant="h3" component="span">
-              {dict.data ? dict.data.word : ""}
+              {dict.data ? toProperCase(dict.data.word) : ""}
             </Typography>
             <Typography variant="h4" component="span">
               <Box color="grey" component="span">

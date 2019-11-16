@@ -13,31 +13,40 @@ code {
     monospace;
 }
 
-.margin25{
+.margin25 {
   margin-left: 25px;
 }
-.m-top15{
+
+.m-top15 {
   margin-top: 25px;
 }
-.green  {
+
+.green {
   color: green;
 }
-.color-light-blue{
+
+.color-light-blue {
   color: #19a7d6;
 }
-.m-top20{
+
+.m-top20 {
   margin-top: 20px;
 }
-.bold{
+
+.bold {
   font-weight: 500 !important;
 }
 
-.container-wrapper{
+.container-wrapper {
   padding-left: 0 !important;
   padding-right: 0 !important;
   background: #fff;
   padding-bottom: 50px;
-  -webkit-box-shadow: 1px 2px 4px 0px rgba(51,3,NaN,1);
--moz-box-shadow: 1px 2px 4px 0px rgba(51,3,NaN,1);
-box-shadow: 1px 2px 4px 0px rgba(51,3,NaN,1);
+  -webkit-box-shadow: 1px 2px 4px 0px rgba(51, 3, NaN, 1);
+  -moz-box-shadow: 1px 2px 4px 0px rgba(51, 3, NaN, 1);
+  box-shadow: 1px 2px 4px 0px rgba(51, 3, NaN, 1);
+}
+
+.dict--title {
+  display: none;
 }

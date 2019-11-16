@@ -8,6 +8,7 @@ import React from "react";
 import CloseIcon from '@material-ui/icons/Close';
 import { TransitionProps } from '@material-ui/core/transitions';
 import { LinkInterceptor } from "components/LinkInterceptor";
+import { toProperCase } from "services/util";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,7 +41,7 @@ export const WordPopup: React.FC<{ word: any, onClose: () => void }> = ({ word, 
             <CloseIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            {word.word}
+            {toProperCase(word.word)} {word.pronounce && <span> - {word.pronounce}</span>}
           </Typography>
           <Button autoFocus color="inherit" onClick={handleClose}>
             Back
@@ -52,9 +53,6 @@ export const WordPopup: React.FC<{ word: any, onClose: () => void }> = ({ word, 
           html={word.content}
           onLinkClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
             e.preventDefault();
-            const arr = e.currentTarget.href.split("/");
-            const word = arr[arr.length - 1];
-            console.log("word", word)
           }}></LinkInterceptor>
       </Box>
     </Dialog>
