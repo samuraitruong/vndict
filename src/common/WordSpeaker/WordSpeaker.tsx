@@ -20,6 +20,7 @@ export const WordSpeaker: React.FC<IWordSpeakerProps> = ({ noStyle, word, accent
   const classes = useStyles({});
   const initialSound: { [x: string]: string } = {}
   const [sounds, setSounds] = useState(initialSound);
+  //TODO : Fix the react warning, somehow it complaint about accents
   const verifyExistingResource = useCallback(async () => {
     const items: { [x: string]: string } = {};
     if (word) {

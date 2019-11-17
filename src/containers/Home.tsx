@@ -66,6 +66,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Home: React.FC = () => {
   const source = localStorage.getItem("SOURCE_ID") || "html";
+  const speakAccents = ["uk", "us"];
   let history = useHistory();
   const classes = useStyles({});
   const [sourceId, setSourceId] = useState(source);
@@ -83,6 +84,7 @@ const Home: React.FC = () => {
       setData(data);
       setMessage(null);
       history.push(inputKeyword);
+      window.scrollTo({top: 0})
     }
     else {
       setData({});
@@ -200,7 +202,7 @@ const Home: React.FC = () => {
                 {dict.data && dict.data.pronounce ? `(${dict.data.pronounce})` : ""}
               </Box>
             </Typography>
-            <WordSpeaker word={dict.data.word} accents={["us", "uk"]} noStyle={false}></WordSpeaker>
+            <WordSpeaker word={dict.data.word} accents={speakAccents} noStyle={false}></WordSpeaker>
             <Divider className={classes.divider} />
             <LinkInterceptor
               html={dict.data && dict.data.content}
