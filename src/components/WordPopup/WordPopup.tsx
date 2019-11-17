@@ -1,5 +1,5 @@
 import {
-  Dialog, AppBar, Toolbar, IconButton, Typography, Button,
+  Dialog, AppBar, Toolbar, IconButton, Typography,
   makeStyles, Theme, createStyles, Slide, Box
 } from "@material-ui/core";
 
@@ -9,6 +9,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { TransitionProps } from '@material-ui/core/transitions';
 import { LinkInterceptor } from "components/LinkInterceptor";
 import { toProperCase } from "services/util";
+import WordSpeaker from "common/WordSpeaker/WordSpeaker";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,18 +44,16 @@ export const WordPopup: React.FC<{ word: any, onClose: () => void }> = ({ word, 
           <Typography variant="h6" className={classes.title}>
             {toProperCase(word.word)} {word.pronounce && <span> - {word.pronounce}</span>}
           </Typography>
-          <Button autoFocus color="inherit" onClick={handleClose}>
-            Back
-            </Button>
+          <WordSpeaker word={word.word} accents={["us", "uk"]} noStyle={true}></WordSpeaker>
         </Toolbar>
       </AppBar>
-      <Box className={classes.innerBox}>
-        <LinkInterceptor
-          html={word.content}
-          onLinkClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-            e.preventDefault();
-          }}></LinkInterceptor>
-      </Box>
+        <Box className={classes.innerBox}>
+          <LinkInterceptor
+            html={word.content}
+            onLinkClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+              e.preventDefault();
+            }}></LinkInterceptor>
+        </Box>
     </Dialog>
-  )
+      )
 }

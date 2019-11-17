@@ -12,7 +12,6 @@ import Paper from "@material-ui/core/Paper"
 import IconButton from "@material-ui/core/IconButton"
 import InputBase from "@material-ui/core/InputBase"
 import Divider from "@material-ui/core/Divider"
-import Chip from "@material-ui/core/Chip"
 import SnackbarContent from "@material-ui/core/SnackbarContent"
 
 import MenuIcon from "@material-ui/icons/Menu";
@@ -23,8 +22,6 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import TranslateIcon from "@material-ui/icons/Translate";
 import SwapHorizIcon from "@material-ui/icons/SwapHoriz";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
-import VolumeDownIcon from "@material-ui/icons/VolumeDown";
-import VolumeUpIcon from "@material-ui/icons/VolumeUp";
 import CloseIcon from '@material-ui/icons/Close';
 
 import { LinkInterceptor } from "components/LinkInterceptor";
@@ -34,6 +31,7 @@ import { fetchWord } from "services/api";
 import { toProperCase } from "services/util";
 import constants from "../constants";
 import { Menu, MenuItem } from "@material-ui/core";
+import { WordSpeaker } from "common/WordSpeaker/WordSpeaker";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -114,18 +112,14 @@ const Home: React.FC = () => {
     search(keyword);
     return false;
   };
-  const playSound = (word?: string, accent?: "us" | "uk") => {
-    const url = `${constants.RESOURCE_URL}/voice/${word.toLocaleLowerCase()}_${accent}.mp3`;
-    const audio = new Audio(url);
-    audio.play();
-  };
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleSourceMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = (value?: string) => {
-    if (constants.DATA_SOURCE_ID.some(x => x=== value)) {
+    if (constants.DATA_SOURCE_ID.some(x => x === value)) {
       localStorage.setItem("SOURCE_ID", value);
       setSourceId(value)
     }
@@ -206,24 +200,7 @@ const Home: React.FC = () => {
                 {dict.data && dict.data.pronounce ? `(${dict.data.pronounce})` : ""}
               </Box>
             </Typography>
-            <Box component="span" className="float-right">
-              <Chip
-                className={classes.speakButton}
-                clickable
-                color="primary"
-                onClick={() => playSound(dict.data.word, "us")}
-                icon={<VolumeDownIcon />}
-                label="US"
-              />
-              <Chip
-                className={classes.speakButton}
-                clickable
-                color="secondary"
-                onClick={() => playSound(dict.data.word, "uk")}
-                icon={<VolumeUpIcon />}
-                label="UK"
-              />
-            </Box>
+            <WordSpeaker word={dict.data.word} accents={["us", "uk"]} noStyle={false}></WordSpeaker>
             <Divider className={classes.divider} />
             <LinkInterceptor
               html={dict.data && dict.data.content}
