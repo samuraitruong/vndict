@@ -198,8 +198,8 @@ const Home: React.FC = () => {
               {dict.data ? toProperCase(dict.data.word) : ""}
             </Typography>
             <Typography variant="h4" component="span">
-              <Box color="grey" component="span">
-                {dict.data && dict.data.pronounce ? `(${dict.data.pronounce})` : ""}
+              <Box color="text.secondary" component="span">
+                {dict.data && dict.data.pronounce ? `  (${dict.data.pronounce})` : ""}
               </Box>
             </Typography>
             <WordSpeaker word={dict.data.word} accents={speakAccents} noStyle={false}></WordSpeaker>
