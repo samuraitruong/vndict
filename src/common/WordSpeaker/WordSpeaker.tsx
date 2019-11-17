@@ -33,6 +33,7 @@ export const WordSpeaker: React.FC<IWordSpeakerProps> = ({ noStyle, word, accent
       }
     }
     setSounds(items);
+    // eslint-disable-next-line
   }, [word])
   useEffect(() => {
     verifyExistingResource();
