@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useCallback } from 'react'
 import { Typography } from '@material-ui/core'
+import useLongPress from "hooks/useLongPress";
 export interface IInterceptionProps {
   html: string;
   onLinkClick: (e: any) => any;
@@ -21,6 +22,9 @@ export function LinkInterceptor({ html, onLinkClick, onWordClick }: IInterceptio
       onWordClick(text);
     }
   }, [onWordClick]);
+  const longPressHandler = useLongPress(() => {
+    wordDdCLickHandle();
+  }, 1000)
 
   useEffect(
     () => {
@@ -43,5 +47,5 @@ export function LinkInterceptor({ html, onLinkClick, onWordClick }: IInterceptio
     [html, onLinkClick, onWordClick, wordDdCLickHandle]
   )
 
-  return <Typography ref={ref} variant="body1" component="article" dangerouslySetInnerHTML={{ __html: html }}></Typography>
+  return <Typography {...longPressHandler} ref={ref} variant="body1" component="article" dangerouslySetInnerHTML={{ __html: html }}></Typography>
 }

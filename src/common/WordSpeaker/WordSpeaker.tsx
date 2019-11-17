@@ -46,7 +46,7 @@ export const WordSpeaker: React.FC<IWordSpeakerProps> = ({ noStyle, word, accent
   return (
     <Box className="float-right">
       {accents.map((a) =>
-        <Chip
+        <Chip key={a}
           className={classes.speakButton}
           clickable={sounds[a] != null}
           disabled={!sounds[a]}
