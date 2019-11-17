@@ -84,7 +84,7 @@ const Home: React.FC = () => {
       setData(data);
       setMessage(null);
       history.push(inputKeyword);
-      window.scrollTo({top: 0})
+      window.scrollTo({ top: 0 })
     }
     else {
       setData({});
@@ -105,9 +105,9 @@ const Home: React.FC = () => {
   const dict = data && (data as any)[type];
   const handleTypeChange = (
     event: React.MouseEvent<HTMLElement>,
-    newAlignment: string
+    dictType: string
   ) => {
-    setType(newAlignment);
+    setType(dictType);
   };
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -176,7 +176,7 @@ const Home: React.FC = () => {
             exclusive
             onChange={handleTypeChange}
             style={{ float: "right" }}
-            aria-label="text alignment"
+            aria-label="select dictionary options"
           >
             <ToggleButton value="en_vn" aria-label="left aligned">
               <TranslateIcon></TranslateIcon> Eng -> Vi &nbsp;
