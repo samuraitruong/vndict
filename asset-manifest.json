@@ -1,21 +1,21 @@
 {
   "files": {
     "main.css": "/vndict/static/css/main.702a1d68.chunk.css",
-    "main.js": "/vndict/static/js/main.d0d3c41c.chunk.js",
-    "main.js.map": "/vndict/static/js/main.d0d3c41c.chunk.js.map",
+    "main.js": "/vndict/static/js/main.6ba9ff6d.chunk.js",
+    "main.js.map": "/vndict/static/js/main.6ba9ff6d.chunk.js.map",
     "runtime-main.js": "/vndict/static/js/runtime-main.1f606cc8.js",
     "runtime-main.js.map": "/vndict/static/js/runtime-main.1f606cc8.js.map",
-    "static/js/2.5f2baec7.chunk.js": "/vndict/static/js/2.5f2baec7.chunk.js",
-    "static/js/2.5f2baec7.chunk.js.map": "/vndict/static/js/2.5f2baec7.chunk.js.map",
+    "static/js/2.7deb0c32.chunk.js": "/vndict/static/js/2.7deb0c32.chunk.js",
+    "static/js/2.7deb0c32.chunk.js.map": "/vndict/static/js/2.7deb0c32.chunk.js.map",
     "index.html": "/vndict/index.html",
-    "precache-manifest.47d8c7c02eed047e0d36e092e7fd95a5.js": "/vndict/precache-manifest.47d8c7c02eed047e0d36e092e7fd95a5.js",
+    "precache-manifest.4523a54cb987bd4c2336897d6f351e97.js": "/vndict/precache-manifest.4523a54cb987bd4c2336897d6f351e97.js",
     "service-worker.js": "/vndict/service-worker.js",
     "static/css/main.702a1d68.chunk.css.map": "/vndict/static/css/main.702a1d68.chunk.css.map"
   },
   "entrypoints": [
     "static/js/runtime-main.1f606cc8.js",
-    "static/js/2.5f2baec7.chunk.js",
+    "static/js/2.7deb0c32.chunk.js",
     "static/css/main.702a1d68.chunk.css",
-    "static/js/main.d0d3c41c.chunk.js"
+    "static/js/main.6ba9ff6d.chunk.js"
   ]
 }
