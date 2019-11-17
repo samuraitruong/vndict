@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/vndict/static/css/main.d8552d90.chunk.css",
+    "main.css": "/vndict/static/css/main.702a1d68.chunk.css",
     "main.js": "/vndict/static/js/main.078d66d7.chunk.js",
     "main.js.map": "/vndict/static/js/main.078d66d7.chunk.js.map",
     "runtime-main.js": "/vndict/static/js/runtime-main.1f606cc8.js",
@@ -8,14 +8,14 @@
     "static/js/2.5f2baec7.chunk.js": "/vndict/static/js/2.5f2baec7.chunk.js",
     "static/js/2.5f2baec7.chunk.js.map": "/vndict/static/js/2.5f2baec7.chunk.js.map",
     "index.html": "/vndict/index.html",
-    "precache-manifest.d80cb3917bc0d32f4178a05c210732c5.js": "/vndict/precache-manifest.d80cb3917bc0d32f4178a05c210732c5.js",
+    "precache-manifest.e0820563c6a6d366f2b517bf344233e9.js": "/vndict/precache-manifest.e0820563c6a6d366f2b517bf344233e9.js",
     "service-worker.js": "/vndict/service-worker.js",
-    "static/css/main.d8552d90.chunk.css.map": "/vndict/static/css/main.d8552d90.chunk.css.map"
+    "static/css/main.702a1d68.chunk.css.map": "/vndict/static/css/main.702a1d68.chunk.css.map"
   },
   "entrypoints": [
     "static/js/runtime-main.1f606cc8.js",
     "static/js/2.5f2baec7.chunk.js",
-    "static/css/main.d8552d90.chunk.css",
+    "static/css/main.702a1d68.chunk.css",
     "static/js/main.078d66d7.chunk.js"
   ]
 }
