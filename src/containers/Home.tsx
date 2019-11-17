@@ -53,7 +53,8 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: theme.spacing(1)
     },
     container: {
-      margin: theme.spacing(1, 0)
+      margin: theme.spacing(1, 0),
+      paddingTop: theme.spacing(2)
     },
     speakButton: {
       marginLeft: theme.spacing(3)
