@@ -14,6 +14,7 @@ export default function useLongPress(callback = () => { }, ms = 300) {
     return () => {
       clearTimeout(timerId);
     };
+    // eslint-disable-next-line
   }, [startLongPress]);
 
   const start = useCallback(() => {
