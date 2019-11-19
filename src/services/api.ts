@@ -1,5 +1,6 @@
 import { IApiResponse, ApiResponseTypes } from "models/IApiResponse";
 import { constants } from "../constants";
+import { sendTrack } from "./trackingService";
 
 export async function fetchWord(word: string, source: string): Promise<IApiResponse<any>> {
   source = source || "html";
@@ -15,6 +16,7 @@ export async function fetchWord(word: string, source: string): Promise<IApiRespo
       "$2"
     );
     result.data = JSON.parse(text);
+    sendTrack(word);
   }
   catch (err) {
     console.log(err);
