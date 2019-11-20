@@ -16,14 +16,13 @@ import SnackbarContent from "@material-ui/core/SnackbarContent"
 
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
-import DirectionsIcon from "@material-ui/icons/Directions";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import TranslateIcon from "@material-ui/icons/Translate";
 import SwapHorizIcon from "@material-ui/icons/SwapHoriz";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
 import CloseIcon from '@material-ui/icons/Close';
-
+import AutorenewIcon from '@material-ui/icons/Autorenew';
 import { LinkInterceptor } from "components/LinkInterceptor";
 import { useParams, useHistory } from "react-router";
 import { WordPopup } from "components/WordPopup/WordPopup";
@@ -32,6 +31,7 @@ import { toProperCase } from "services/util";
 import constants from "../constants";
 import { Menu, MenuItem } from "@material-ui/core";
 import { WordSpeaker } from "common/WordSpeaker/WordSpeaker";
+import LiveSearch from "components/LiveSearch/LiveSearch";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -77,10 +77,14 @@ const Home: React.FC = () => {
   const [type, setType] = useState("en_vn");
   const [message, setMessage] = useState(null);
   const { word } = useParams();
+  const [liveSearch, setLiveSearch] = useState(true);
+
+  
   const search = useCallback(async (inputKeyword: string) => {
     if (!inputKeyword) return;
     const { data } = await fetchWord(inputKeyword, sourceId)
     if (data) {
+      setLiveSearch(false);
       setType("en_vn");
       setData(data);
       setMessage(null);
@@ -88,6 +92,7 @@ const Home: React.FC = () => {
       window.scrollTo({ top: 0 })
     }
     else {
+      setLiveSearch(true);
       setData({});
       setMessage("Xin lỗi, từ bạn tìm kiếm không tồn tại hoặc chưa được cập nhật")
     }
@@ -128,6 +133,12 @@ const Home: React.FC = () => {
     }
     setAnchorEl(null);
   };
+  const reset = () => {
+    setLiveSearch(true);
+    setKeyword("");
+    setData(null);
+    history.push("/");
+  }
   return (
     <React.Fragment>
       <Grid container className={classes.container}>
@@ -165,8 +176,9 @@ const Home: React.FC = () => {
                 color="primary"
                 className={classes.iconButton}
                 aria-label="directions"
+                onClick ={reset}
               >
-                <DirectionsIcon />
+                <AutorenewIcon />
               </IconButton>
             </Paper>
           </form>
@@ -191,7 +203,6 @@ const Home: React.FC = () => {
           </ToggleButtonGroup>
         </Grid>
       </Grid>
-
       {dict && (
         <Grid>
           <Grid xs={12} item>
@@ -235,6 +246,8 @@ const Home: React.FC = () => {
           <CloseIcon />
         </IconButton>} />
       )}
+      { liveSearch && <LiveSearch onWordClick={(liveSearchWord) => search(liveSearchWord)}></LiveSearch>}
+
     </React.Fragment>
   );
 };

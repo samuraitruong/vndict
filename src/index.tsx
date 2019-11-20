@@ -5,7 +5,7 @@ import App from 'common/App';
 import * as serviceWorker from './serviceWorker';
 import './index.css'
 
-var firebaseConfig = {
+const firebaseConfig = {
     apiKey: "AIzaSyC0Afu4UrdUxEXpZSNtTX5dqB7Kiz9h-58",
     authDomain: "vndict-http.firebaseapp.com",
     databaseURL: "https://vndict-http.firebaseio.com",

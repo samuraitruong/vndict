@@ -16,6 +16,9 @@ export async function fetchWord(word: string, source: string): Promise<IApiRespo
       "$2"
     );
     result.data = JSON.parse(text);
+    if(Object.keys(result.data).length === 0) {
+      throw new Error("Word data is empty")
+    }
     sendTrack(word);
   }
   catch (err) {
