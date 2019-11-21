@@ -165,8 +165,6 @@ const Home: React.FC = () => {
                 <MenuItem disabled={sourceId === "data"} onClick={() => handleClose("data")}>Từ điển 2</MenuItem>
               </Menu>
               <InputBase
-                
-                
                 value={keyword}
                 onChange={e => setKeyword(e.target.value)}
                 className={classes.input}
@@ -174,13 +172,14 @@ const Home: React.FC = () => {
                 inputProps={{ "aria-label": "English -> Vietnamese" }}
               />
                {isBrowserSupportSpeech && <IconButton
-               disabled = {started}
+                disabled = {started}
                 onClick = {() => startVoiceInput()}
                 className={classes.iconButton}
                 aria-label="voice input"
               >
-                <MicIcon />
+                <MicIcon color={started? "secondary": "inherit"}/>
               </IconButton>}
+              
 
               <IconButton
                 type="submit"
@@ -201,7 +200,8 @@ const Home: React.FC = () => {
             </Paper>
           </form>
         </Grid>
-        <Grid item sm={6} xs={12}>
+        {dict && 
+        <Grid item sm={6} xs={12} >
           <ToggleButtonGroup
             value={type}
             exclusive
@@ -220,6 +220,7 @@ const Home: React.FC = () => {
               </ToggleButton>
           </ToggleButtonGroup>
         </Grid>
+        }
       </Grid>
       {dict && (
         <Grid>
