@@ -33,7 +33,7 @@ const LiveSearch: React.FC<ILiveSearchProps> = ({ onWordClick }) => {
       <Typography variant="h5" color="primary">Tìm kiếm gần nhất ....</Typography>
       {Object.keys(trackData).map(key => {
         return (
-          <Zoom in={true}>
+          <Zoom in={true} key={key}>
             <Chip
               label={key}
               className={classes.liveSearchWord}

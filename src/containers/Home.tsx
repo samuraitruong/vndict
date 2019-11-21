@@ -32,6 +32,8 @@ import constants from "../constants";
 import { Menu, MenuItem } from "@material-ui/core";
 import { WordSpeaker } from "common/WordSpeaker/WordSpeaker";
 import LiveSearch from "components/LiveSearch/LiveSearch";
+import useSpeechInput from "hooks/useSpeechInput";
+import MicIcon from '@material-ui/icons/Mic';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -78,8 +80,6 @@ const Home: React.FC = () => {
   const [message, setMessage] = useState(null);
   const { word } = useParams();
   const [liveSearch, setLiveSearch] = useState(true);
-
-  
   const search = useCallback(async (inputKeyword: string) => {
     if (!inputKeyword) return;
     const { data } = await fetchWord(inputKeyword, sourceId)
@@ -97,6 +97,13 @@ const Home: React.FC = () => {
       setMessage("Xin lỗi, từ bạn tìm kiếm không tồn tại hoặc chưa được cập nhật")
     }
   }, [history, sourceId]);
+  const onVoiceResultCb = useCallback((input) => {
+    setKeyword(input);
+    search(input);
+  }, [search])
+  const voiceStartedCB = useCallback(() => {setKeyword("")}, []);
+
+  const {isBrowserSupportSpeech, startVoiceInput, started} = useSpeechInput(onVoiceResultCb,voiceStartedCB);
   const onWordClick = async (clickedWord: string) => {
     const response = await fetchWord(clickedWord, sourceId);
     if (response.data && response.data.en_vn && response.data.en_vn.data) {
@@ -158,12 +165,23 @@ const Home: React.FC = () => {
                 <MenuItem disabled={sourceId === "data"} onClick={() => handleClose("data")}>Từ điển 2</MenuItem>
               </Menu>
               <InputBase
+                
+                
                 value={keyword}
                 onChange={e => setKeyword(e.target.value)}
                 className={classes.input}
-                placeholder="English -> Vietnamese"
+                placeholder={started? "Nói từ muốn tìm kiếm":"Nhập từ muốn tìm"}
                 inputProps={{ "aria-label": "English -> Vietnamese" }}
               />
+               {isBrowserSupportSpeech && <IconButton
+               disabled = {started}
+                onClick = {() => startVoiceInput()}
+                className={classes.iconButton}
+                aria-label="voice input"
+              >
+                <MicIcon />
+              </IconButton>}
+
               <IconButton
                 type="submit"
                 className={classes.iconButton}
