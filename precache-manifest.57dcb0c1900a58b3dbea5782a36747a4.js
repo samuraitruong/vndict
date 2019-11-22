@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "55cbda83cf5cd0185fb70809861bbfe9",
+    "revision": "38ce893e272207517effa746b0175e3f",
     "url": "https://en2vi.com/index.html"
   },
   {
-    "revision": "71c359851e97216b21d5",
+    "revision": "fec67ec565614b4f3692",
     "url": "https://en2vi.com/static/css/main.c7837df7.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "https://en2vi.com/static/js/2.131dbb60.chunk.js"
   },
   {
-    "revision": "71c359851e97216b21d5",
-    "url": "https://en2vi.com/static/js/main.1961e22f.chunk.js"
+    "revision": "fec67ec565614b4f3692",
+    "url": "https://en2vi.com/static/js/main.b92b3a44.chunk.js"
   },
   {
     "revision": "1f0cd8315f4309931a5c",
