@@ -6,4 +6,5 @@ export interface IApiResponse<T> {
   data?: T
   resultType: ApiResponseTypes,
   errorMessage?: string;
+  suggestions?: string[];
 }

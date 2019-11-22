@@ -1,6 +1,7 @@
 import { IApiResponse, ApiResponseTypes } from "models/IApiResponse";
 import { constants } from "../constants";
 import { sendTrack } from "./trackingService";
+import { findPossibleWord } from "./util";
 
 export async function fetchWord(word: string, source: string): Promise<IApiResponse<any>> {
   source = source || "html";
@@ -17,12 +18,17 @@ export async function fetchWord(word: string, source: string): Promise<IApiRespo
     );
     result.data = JSON.parse(text);
     if(Object.keys(result.data).length === 0) {
+      
       throw new Error("Word data is empty")
     }
     sendTrack(word);
   }
   catch (err) {
     console.log(err);
+    const similars = findPossibleWord(word);
+      if(similars.length >0) {
+        result.suggestions = similars;
+    }
     result.resultType = ApiResponseTypes.Error;
     result.errorMessage = "failed to fetch word";
   }

@@ -29,7 +29,7 @@ import { WordPopup } from "components/WordPopup/WordPopup";
 import { fetchWord } from "services/api";
 import { toProperCase } from "services/util";
 import constants from "../constants";
-import { Menu, MenuItem } from "@material-ui/core";
+import { Menu, MenuItem, Link } from "@material-ui/core";
 import { WordSpeaker } from "common/WordSpeaker/WordSpeaker";
 import LiveSearch from "components/LiveSearch/LiveSearch";
 import useSpeechInput from "hooks/useSpeechInput";
@@ -76,13 +76,16 @@ const Home: React.FC = () => {
   const [data, setData] = useState();
   const [popupWord, setPopupWord] = useState(null);
   const [keyword, setKeyword] = useState("");
+  const [suggestionList, setSuggestionList] = useState([]);
   const [type, setType] = useState("en_vn");
   const [message, setMessage] = useState(null);
   const { word } = useParams();
   const [liveSearch, setLiveSearch] = useState(true);
   const search = useCallback(async (inputKeyword: string) => {
     if (!inputKeyword) return;
-    const { data } = await fetchWord(inputKeyword, sourceId)
+    const { data, suggestions } = await fetchWord(inputKeyword, sourceId);
+    console.log("suggestions", suggestions)
+    
     if (data) {
       setLiveSearch(false);
       setType("en_vn");
@@ -94,6 +97,7 @@ const Home: React.FC = () => {
     else {
       setLiveSearch(true);
       setData({});
+      setSuggestionList(suggestions);
       setMessage("Xin lỗi, từ bạn tìm kiếm không tồn tại hoặc chưa được cập nhật")
     }
   }, [history, sourceId]);
@@ -261,12 +265,23 @@ const Home: React.FC = () => {
       )}
 
       {message && (
-        <SnackbarContent className={classes.snackbar} message={message} action={<IconButton key="close" aria-label="close" color="inherit" onClick={() => setMessage(null)}>
+        <SnackbarContent className={classes.snackbar} 
+        message={
+          <React.Fragment>
+            <Typography variant="subtitle2">{message}</Typography>
+
+        {(suggestionList  && suggestionList.length >0) && <React.Fragment>
+            <span>Có thể bạn quan tâm :</span>
+           {suggestionList.map(x => <Link key={x} style ={{color: "#fff", cursor: "pointer"}} onClick={() => search(x)}>{x}</Link>)} </React.Fragment>} 
+          </React.Fragment>} 
+        
+        action={<IconButton key="close" aria-label="close" color="inherit" onClick={() => setMessage(null)}>
           <CloseIcon />
-        </IconButton>} />
+        </IconButton>}>
+          
+        </SnackbarContent>
       )}
       { liveSearch && <LiveSearch onWordClick={(liveSearchWord) => search(liveSearchWord)}></LiveSearch>}
-
     </React.Fragment>
   );
 };
