@@ -21,7 +21,7 @@ const useResource = ({ kind, path }: ApiProviderProps) => {
       const url = `${RESOURCE_ROOT}/${kind}/${path}`
       if (kind === RequestKind.HTML) {
         (async () => {
-          await fetch(url)
+          await fetch(url, {mode: "no-cors"})
             .then(res => res.json())
             .then(setData)
             .catch(setError)
