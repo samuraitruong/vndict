@@ -34,6 +34,7 @@ import { WordSpeaker } from "common/WordSpeaker/WordSpeaker";
 import LiveSearch from "components/LiveSearch/LiveSearch";
 import useSpeechInput from "hooks/useSpeechInput";
 import MicIcon from '@material-ui/icons/Mic';
+import { useAutocomplete } from "hooks/useAutoComplete";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -81,6 +82,8 @@ const Home: React.FC = () => {
   const [message, setMessage] = useState(null);
   const { word } = useParams();
   const [liveSearch, setLiveSearch] = useState(true);
+  const {autoCompleteItems} = useAutocomplete(keyword);
+
   const search = useCallback(async (inputKeyword: string) => {
     if (!inputKeyword) return;
     const { data, suggestions } = await fetchWord(inputKeyword, sourceId);
@@ -203,6 +206,9 @@ const Home: React.FC = () => {
               </IconButton>
             </Paper>
           </form>
+        </Grid>
+        <Grid>
+          <span>{JSON.stringify(autoCompleteItems)}</span>
         </Grid>
         {dict && 
         <Grid item sm={6} xs={12} >

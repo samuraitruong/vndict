@@ -4,6 +4,7 @@ import * as firebase from "firebase";
 import App from 'common/App';
 import * as serviceWorker from './serviceWorker';
 import './index.css'
+import autoCompleteService from 'services/autoCompleteService';
 
 const firebaseConfig = {
     apiKey: "AIzaSyC0Afu4UrdUxEXpZSNtTX5dqB7Kiz9h-58",
@@ -18,7 +19,8 @@ const firebaseConfig = {
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   firebase.analytics();
-  
+
+  autoCompleteService.initialize();
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
