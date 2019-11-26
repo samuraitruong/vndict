@@ -87,7 +87,7 @@ const Home: React.FC = () => {
   const { word } = useParams();
   const [liveSearch, setLiveSearch] = useState(true);
   const autocomplete = useDebounce(keyword, 500);
-  const { autoCompleteItems , autoCompleteLoading, setAutoCompleteItems} = useAutocomplete(autocomplete);
+  const { autoCompleteItems, autoCompleteLoading, setAutoCompleteItems } = useAutocomplete(autocomplete);
 
 
   const search = useCallback(async (inputKeyword: string) => {
@@ -160,7 +160,7 @@ const Home: React.FC = () => {
     setData(null);
     history.push("/");
   }
- 
+
   return (
     <React.Fragment>
       <Grid container className={classes.container}>
@@ -215,7 +215,7 @@ const Home: React.FC = () => {
             </Paper>
           </form>
         </Grid>
-       
+
         {dict &&
           <Grid item sm={6} xs={12} >
             <ToggleButtonGroup
@@ -237,10 +237,10 @@ const Home: React.FC = () => {
             </ToggleButtonGroup>
           </Grid>
         }
-         <Grid xs={12} item>
-          {autoCompleteLoading && <span>Loading....</span> }
-          {autoCompleteItems.length >0 && autoCompleteItems.map(x => <Link key={x} color="primary" href={x} className={classes.autoComplete} onClick={
-            (e: React.MouseEvent<HTMLAnchorElement>) =>  { e.preventDefault(); search(x)}}>{x}</Link>)
+        <Grid xs={12} item container>
+          {autoCompleteLoading && <span>Loading....</span>}
+          {autoCompleteItems.length > 0 && autoCompleteItems.map(x => <Link key={x} color="primary" href={x} className={classes.autoComplete} onClick={
+            (e: React.MouseEvent<HTMLAnchorElement>) => { e.preventDefault(); search(x) }}>{x}</Link>)
           }
         </Grid>
       </Grid>
