@@ -11,11 +11,11 @@ class AutoCompleteService {
     constructor() {
         this.options = {
             shouldSort: true,
-            threshold: 0.1,
+            threshold: 0.05,
             location: 0,
             distance: 100,
             maxPatternLength: 32,
-            minMatchCharLength: 1,
+            minMatchCharLength: 3,
             keys: [
               "title",
             ]
@@ -31,12 +31,12 @@ class AutoCompleteService {
         this.isReady = true;
     }
     public getAutocomplete(word:string) {
-        if(!this.isReady || word.length <3) return [];
-        console.log("do fuzzy search")
+        if(!word || !this.isReady || word.length <3) return [];
         const results : any[]=  this.fuse.search(word);
         const arr =  results.map(x =>x.title);
-        if(arr && arr.length >0 && arr[0] === word) return []
-        return arr;
+        // console.log(arr)
+        // if(arr && arr.length >0 && arr[0] === word) return []
+        return arr.slice(0,10);
     }
 }
 //this is singleton

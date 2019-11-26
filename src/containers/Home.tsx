@@ -65,6 +65,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     snackbar: {
       backgroundColor: theme.palette.error.dark,
+    },
+    autoComplete: {
+      margin: theme.spacing(1)
     }
   })
 );
@@ -84,13 +87,12 @@ const Home: React.FC = () => {
   const { word } = useParams();
   const [liveSearch, setLiveSearch] = useState(true);
   const autocomplete = useDebounce(keyword, 500);
-  const { autoCompleteItems } = useAutocomplete(autocomplete);
+  const { autoCompleteItems , autoCompleteLoading, setAutoCompleteItems} = useAutocomplete(autocomplete);
 
 
   const search = useCallback(async (inputKeyword: string) => {
     if (!inputKeyword) return;
     const { data, suggestions } = await fetchWord(inputKeyword, sourceId);
-    console.log("suggestions", suggestions)
 
     if (data) {
       setLiveSearch(false);
@@ -106,7 +108,9 @@ const Home: React.FC = () => {
       setSuggestionList(suggestions);
       setMessage("Xin lỗi, từ bạn tìm kiếm không tồn tại hoặc chưa được cập nhật")
     }
-  }, [history, sourceId]);
+    setAutoCompleteItems([])
+
+  }, [history, sourceId, setAutoCompleteItems]);
   const onVoiceResultCb = useCallback((input) => {
     setKeyword(input);
     search(input);
@@ -156,6 +160,7 @@ const Home: React.FC = () => {
     setData(null);
     history.push("/");
   }
+ 
   return (
     <React.Fragment>
       <Grid container className={classes.container}>
@@ -210,9 +215,7 @@ const Home: React.FC = () => {
             </Paper>
           </form>
         </Grid>
-        <Grid>
-          <span>{JSON.stringify(autoCompleteItems)}</span>
-        </Grid>
+       
         {dict &&
           <Grid item sm={6} xs={12} >
             <ToggleButtonGroup
@@ -234,6 +237,12 @@ const Home: React.FC = () => {
             </ToggleButtonGroup>
           </Grid>
         }
+         <Grid xs={12} item>
+          {autoCompleteLoading && <span>Loading....</span> }
+          {autoCompleteItems.length >0 && autoCompleteItems.map(x => <Link key={x} color="primary" href={x} className={classes.autoComplete} onClick={
+            (e: React.MouseEvent<HTMLAnchorElement>) =>  { e.preventDefault(); search(x)}}>{x}</Link>)
+          }
+        </Grid>
       </Grid>
       {dict && (
         <Grid>

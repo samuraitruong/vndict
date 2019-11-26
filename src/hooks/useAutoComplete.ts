@@ -3,24 +3,21 @@ import { useEffect, useState } from "react";
 
 export function useAutocomplete(word: string) {
     const [autoCompleteItems, setAutoCompleteItems] = useState([])
+    const [autoCompleteLoading, setAutoCompleteLoading] = useState(false);
     useEffect(() => {
-        const inner = async () => {
-            return new Promise((r) => {
-                const start = (new Date()).getTime();
-                const results = autoCompleteService.getAutocomplete(word);
-                r()
-                setAutoCompleteItems(results);
-                console.log("FUZZY SEARCH TIME", (new Date()).getTime() - start)
-            })
-        }
-        inner();
+        setAutoCompleteLoading(true);
+        const start = (new Date()).getTime();
+        const results = autoCompleteService.getAutocomplete(word);
+        setAutoCompleteItems(results);
+        console.log("auto complete search time(ms)", (new Date()).getTime() - start)
+        setAutoCompleteLoading(false);
         return () => {
 
         }
-        //autoCompleteService.getAutocomplete(word)
     }, [word]);
 
     return {
-        autoCompleteItems
+        autoCompleteItems,
+        autoCompleteLoading,setAutoCompleteItems
     }
 }
