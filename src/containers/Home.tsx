@@ -35,6 +35,7 @@ import LiveSearch from "components/LiveSearch/LiveSearch";
 import useSpeechInput from "hooks/useSpeechInput";
 import MicIcon from '@material-ui/icons/Mic';
 import { useAutocomplete } from "hooks/useAutoComplete";
+import { useDebounce } from "hooks/useDebounce";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -82,13 +83,15 @@ const Home: React.FC = () => {
   const [message, setMessage] = useState(null);
   const { word } = useParams();
   const [liveSearch, setLiveSearch] = useState(true);
-  const {autoCompleteItems} = useAutocomplete(keyword);
+  const autocomplete = useDebounce(keyword, 500);
+  const { autoCompleteItems } = useAutocomplete(autocomplete);
+
 
   const search = useCallback(async (inputKeyword: string) => {
     if (!inputKeyword) return;
     const { data, suggestions } = await fetchWord(inputKeyword, sourceId);
     console.log("suggestions", suggestions)
-    
+
     if (data) {
       setLiveSearch(false);
       setType("en_vn");
@@ -108,9 +111,9 @@ const Home: React.FC = () => {
     setKeyword(input);
     search(input);
   }, [search])
-  const voiceStartedCB = useCallback(() => {setKeyword("")}, []);
+  const voiceStartedCB = useCallback(() => { setKeyword("") }, []);
 
-  const {isBrowserSupportSpeech, startVoiceInput, started} = useSpeechInput(onVoiceResultCb,voiceStartedCB);
+  const { isBrowserSupportSpeech, startVoiceInput, started } = useSpeechInput(onVoiceResultCb, voiceStartedCB);
   const onWordClick = async (clickedWord: string) => {
     const response = await fetchWord(clickedWord, sourceId);
     if (response.data && response.data.en_vn && response.data.en_vn.data) {
@@ -175,18 +178,18 @@ const Home: React.FC = () => {
                 value={keyword}
                 onChange={e => setKeyword(e.target.value)}
                 className={classes.input}
-                placeholder={started? "Nói từ muốn tìm kiếm":"Nhập từ muốn tìm"}
+                placeholder={started ? "Nói từ muốn tìm kiếm" : "Nhập từ muốn tìm"}
                 inputProps={{ "aria-label": "English -> Vietnamese" }}
               />
-               {isBrowserSupportSpeech && <IconButton
-                disabled = {started}
-                onClick = {() => startVoiceInput()}
+              {isBrowserSupportSpeech && <IconButton
+                disabled={started}
+                onClick={() => startVoiceInput()}
                 className={classes.iconButton}
                 aria-label="voice input"
               >
-                <MicIcon color={started? "secondary": "inherit"}/>
+                <MicIcon color={started ? "secondary" : "inherit"} />
               </IconButton>}
-              
+
 
               <IconButton
                 type="submit"
@@ -200,7 +203,7 @@ const Home: React.FC = () => {
                 color="primary"
                 className={classes.iconButton}
                 aria-label="directions"
-                onClick ={reset}
+                onClick={reset}
               >
                 <AutorenewIcon />
               </IconButton>
@@ -210,26 +213,26 @@ const Home: React.FC = () => {
         <Grid>
           <span>{JSON.stringify(autoCompleteItems)}</span>
         </Grid>
-        {dict && 
-        <Grid item sm={6} xs={12} >
-          <ToggleButtonGroup
-            value={type}
-            exclusive
-            onChange={handleTypeChange}
-            style={{ float: "right" }}
-            aria-label="select dictionary options"
-          >
-            <ToggleButton value="en_vn" aria-label="left aligned">
-              <TranslateIcon></TranslateIcon> Eng -> Vi &nbsp;
+        {dict &&
+          <Grid item sm={6} xs={12} >
+            <ToggleButtonGroup
+              value={type}
+              exclusive
+              onChange={handleTypeChange}
+              style={{ float: "right" }}
+              aria-label="select dictionary options"
+            >
+              <ToggleButton value="en_vn" aria-label="left aligned">
+                <TranslateIcon></TranslateIcon> Eng -> Vi &nbsp;
               </ToggleButton>
-            <ToggleButton value="en_en" aria-label="centered">
-              <SwapHorizIcon /> Eng -> Eng &nbsp;
+              <ToggleButton value="en_en" aria-label="centered">
+                <SwapHorizIcon /> Eng -> Eng &nbsp;
               </ToggleButton>
-            <ToggleButton value="synonyms" aria-label="right aligned">
-              <AccountTreeIcon /> Đồng Nghĩa
+              <ToggleButton value="synonyms" aria-label="right aligned">
+                <AccountTreeIcon /> Đồng Nghĩa
               </ToggleButton>
-          </ToggleButtonGroup>
-        </Grid>
+            </ToggleButtonGroup>
+          </Grid>
         }
       </Grid>
       {dict && (
@@ -271,23 +274,23 @@ const Home: React.FC = () => {
       )}
 
       {message && (
-        <SnackbarContent className={classes.snackbar} 
-        message={
-          <React.Fragment>
-            <Typography variant="subtitle2">{message}</Typography>
+        <SnackbarContent className={classes.snackbar}
+          message={
+            <React.Fragment>
+              <Typography variant="subtitle2">{message}</Typography>
 
-        {(suggestionList  && suggestionList.length >0) && <React.Fragment>
-            <span>Có thể bạn quan tâm :</span>
-           {suggestionList.map(x => <Link key={x} style ={{color: "#fff", cursor: "pointer"}} onClick={() => search(x)}>{x}</Link>)} </React.Fragment>} 
-          </React.Fragment>} 
-        
-        action={<IconButton key="close" aria-label="close" color="inherit" onClick={() => setMessage(null)}>
-          <CloseIcon />
-        </IconButton>}>
-          
+              {(suggestionList && suggestionList.length > 0) && <React.Fragment>
+                <span>Có thể bạn quan tâm :</span>
+                {suggestionList.map(x => <Link key={x} style={{ color: "#fff", cursor: "pointer" }} onClick={() => search(x)}>{x}</Link>)} </React.Fragment>}
+            </React.Fragment>}
+
+          action={<IconButton key="close" aria-label="close" color="inherit" onClick={() => setMessage(null)}>
+            <CloseIcon />
+          </IconButton>}>
+
         </SnackbarContent>
       )}
-      { liveSearch && <LiveSearch onWordClick={(liveSearchWord) => search(liveSearchWord)}></LiveSearch>}
+      {liveSearch && <LiveSearch onWordClick={(liveSearchWord) => search(liveSearchWord)}></LiveSearch>}
     </React.Fragment>
   );
 };
