@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import * as firebase from "firebase";
+import moment from "moment";
+
 export interface ITracking{
   [key : string]: string;
 }
@@ -12,7 +14,8 @@ export function useTracking() {
     useEffect(
       () => {
         try{
-        const ref = firebase.database().ref('/');
+        const now = moment().utc().startOf("day").format("YYYYMMDD")
+        const ref = firebase.database().ref('/'+now);
         console.log("ref");
         ref.on("value", (snapshot) => { 
             setLoading(false);
