@@ -31,7 +31,8 @@ const LiveSearch: React.FC<ILiveSearchProps> = ({ onWordClick }) => {
   return (
     <Grid className={classes.liveSearchContainer}>
       <Typography variant="h5" color="primary">Tìm kiếm gần nhất ....</Typography>
-      {Object.keys(trackData).map(key => {
+      {
+      trackData? Object.keys(trackData).map(key => {
         return (
           <Zoom in={true} key={key}>
             <Chip
@@ -44,7 +45,7 @@ const LiveSearch: React.FC<ILiveSearchProps> = ({ onWordClick }) => {
             />
           </Zoom>
         );
-      })}
+      }): <span>Chưa có dữ liệu</span>}
       {loading && <CircularProgress color="secondary" />}
       {error && <span>Xin lỗi, đã xãy ra lỗi kết nối với máy chủ, vui lòng thử lại sau.</span>}
     </Grid>
