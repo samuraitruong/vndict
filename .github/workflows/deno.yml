@@ -34,4 +34,4 @@ jobs:
       - name: yarn install
         run: yarn install
       - name: build
-        uses: yarn build
+        run: yarn build
