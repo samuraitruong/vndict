@@ -15,12 +15,11 @@ on:
     branches: [master]
 
 jobs:
-  test:
+  build:
     runs-on: ${{ matrix.os }} # runs a test on Ubuntu, Windows and macOS
 
     strategy:
       matrix:
-        deno: ["v1.x", "nightly"]
         os: [ubuntu-latest]
 
     steps:
@@ -35,3 +34,9 @@ jobs:
         run: yarn install
       - name: build
         run: yarn build
+      - name: GitHub Pages action
+        uses: peaceiris/actions-gh-pages@v3.7.3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build
+ 
