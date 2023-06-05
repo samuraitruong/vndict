@@ -36,9 +36,6 @@ import MicIcon from "@mui/icons-material/Mic";
 import { useAutocomplete } from "hooks/useAutoComplete";
 import { useDebounce } from "hooks/useDebounce";
 
-interface PageParams extends Record<string, string> {
-  word?: string;
-}
 interface DictData {}
 
 const SnackbarContentStyled = styled(SnackbarContent)(({ theme }) => ({

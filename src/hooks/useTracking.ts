@@ -37,7 +37,9 @@ export function useTracking() {
         const data = docSnapshot.data();
         console.log("Current data: ", data);
         setTrackData(docSnapshot.data());
+        setLoading(false);
       } else {
+        setError(true);
         console.log("Document does not exist");
       }
     });
@@ -45,7 +47,7 @@ export function useTracking() {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [setLoading, setError, db]);
 
   return {
     error,
