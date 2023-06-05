@@ -18,11 +18,11 @@ jobs:
       - name: Setup repo
         uses: actions/checkout@v2
 
-      - name: install node v14
+      - name: Setup NodeJS
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'yarn'
+          cache: "yarn"
       - name: yarn install
         run: yarn install
       - name: build

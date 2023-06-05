@@ -85,8 +85,7 @@ const Home: React.FC = () => {
   const matchUrl = useMatch("/:word");
   const [liveSearch, setLiveSearch] = useState(true);
   const autocomplete = useDebounce(keyword, 500);
-  const { word } = matchUrl.params || {};
-  console.log("memem", word);
+  const { word } = matchUrl?.params || {};
   const { autoCompleteItems, autoCompleteLoading, setAutoCompleteItems } =
     useAutocomplete(autocomplete);
 
@@ -94,7 +93,6 @@ const Home: React.FC = () => {
     async (inputKeyword: string) => {
       if (!inputKeyword) return;
       const { data, suggestions } = await fetchWord(inputKeyword, sourceId);
-      console.log(inputKeyword, data);
       if (data) {
         setLiveSearch(false);
         setType("en_vn");
@@ -136,7 +134,6 @@ const Home: React.FC = () => {
     }
   };
   useEffect(() => {
-    console.log("word changed");
     setKeyword(word);
     search(word);
   }, [word, search]);
