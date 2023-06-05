@@ -1,14 +1,18 @@
-import React, { useEffect, useRef, useCallback } from 'react'
-import { Typography } from '@material-ui/core'
+import React, { useEffect, useRef, useCallback } from "react";
+import { Typography } from "@mui/material";
 import useLongPress from "hooks/useLongPress";
 export interface IInterceptionProps {
   html: string;
   onLinkClick: (e: any) => any;
   onWordClick?: (e: string) => void;
 }
-export function LinkInterceptor({ html, onLinkClick, onWordClick }: IInterceptionProps) {
-  const ref = useRef(null)
-  const listeners = useRef([])
+export function LinkInterceptor({
+  html,
+  onLinkClick,
+  onWordClick,
+}: IInterceptionProps) {
+  const ref = useRef(null);
+  const listeners = useRef([]);
   const wordDdCLickHandle = useCallback(() => {
     let text = "";
     const doc = document as any;
@@ -24,28 +28,33 @@ export function LinkInterceptor({ html, onLinkClick, onWordClick }: IInterceptio
   }, [onWordClick]);
   const longPressHandler = useLongPress(() => {
     wordDdCLickHandle();
-  }, 1000)
+  }, 1000);
 
-  useEffect(
-    () => {
-      listeners.current.push(ref.current);
-      ref.current.addEventListener("dblclick", wordDdCLickHandle)
-      const links: HTMLElement[] = Array.from(ref.current.querySelectorAll('a'))
-      links.forEach(node => {
-        node.addEventListener('click', onLinkClick)
-        listeners.current.push(node)
-      })
+  useEffect(() => {
+    listeners.current.push(ref.current);
+    ref.current.addEventListener("dblclick", wordDdCLickHandle);
+    const links: HTMLElement[] = Array.from(ref.current.querySelectorAll("a"));
+    links.forEach((node) => {
+      node.addEventListener("click", onLinkClick);
+      listeners.current.push(node);
+    });
 
-      return () => {
-        listeners.current.forEach(node => {
-          node.removeEventListener('click', onLinkClick);
-          node.removeEventListener('dblclick', wordDdCLickHandle);
-        });
-        listeners.current = []
-      }
-    },
-    [html, onLinkClick, onWordClick, wordDdCLickHandle]
-  )
+    return () => {
+      listeners.current.forEach((node) => {
+        node.removeEventListener("click", onLinkClick);
+        node.removeEventListener("dblclick", wordDdCLickHandle);
+      });
+      listeners.current = [];
+    };
+  }, [html, onLinkClick, onWordClick, wordDdCLickHandle]);
 
-  return <Typography {...longPressHandler} ref={ref} variant="body1" component="article" dangerouslySetInnerHTML={{ __html: html }}></Typography>
+  return (
+    <Typography
+      {...longPressHandler}
+      ref={ref}
+      variant="body1"
+      component="article"
+      dangerouslySetInnerHTML={{ __html: html }}
+    ></Typography>
+  );
 }

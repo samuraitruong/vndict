@@ -4,40 +4,33 @@ import {
   Toolbar,
   IconButton,
   Typography,
-  makeStyles,
-  Theme,
-  createStyles,
   Box,
-} from '@material-ui/core';
+} from "@mui/material";
+import { styled } from "@mui/system";
 
-import React from 'react';
+import React from "react";
 
-import CloseIcon from '@material-ui/icons/Close';
-import { LinkInterceptor } from 'components/LinkInterceptor';
-import { toProperCase } from 'services/util';
-import WordSpeaker from 'common/WordSpeaker/WordSpeaker';
+import CloseIcon from "@mui/icons-material/Close";
+import { LinkInterceptor } from "components/LinkInterceptor";
+import { toProperCase } from "services/util";
+import WordSpeaker from "common/WordSpeaker/WordSpeaker";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    appBar: {
-      position: 'relative',
-    },
-    title: {
-      marginLeft: theme.spacing(2),
-      flex: 1,
-    },
-    innerBox: {
-      padding: theme.spacing(2),
-    },
-  }),
-);
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
+  position: "relative",
+}));
+
+const StyledTypography = styled(Typography)(({ theme }) => ({
+  marginLeft: theme.spacing(2),
+  flex: 1,
+}));
+const StyledBox = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(2),
+}));
 
 export const WordPopup: React.FC<{ word: any; onClose: () => void }> = ({
   word,
   onClose,
 }) => {
-  const classes = useStyles({});
-
   const handleClose = () => onClose();
   if (!word) return null;
 
@@ -47,35 +40,35 @@ export const WordPopup: React.FC<{ word: any; onClose: () => void }> = ({
       open={word != null}
       onClose={() => {}}
     >
-      <AppBar className={classes.appBar}>
+      <StyledAppBar>
         <Toolbar>
           <IconButton
-            edge='start'
-            color='inherit'
+            edge="start"
+            color="inherit"
             onClick={handleClose}
-            aria-label='close'
+            aria-label="close"
           >
             <CloseIcon />
           </IconButton>
-          <Typography variant='h6' className={classes.title}>
-            {toProperCase(word.word)}{' '}
+          <StyledTypography variant="h6">
+            {toProperCase(word.word)}{" "}
             {word.pronounce && <span> - {word.pronounce}</span>}
-          </Typography>
+          </StyledTypography>
           <WordSpeaker
             word={word.word}
-            accents={['us', 'uk']}
+            accents={["us", "uk"]}
             noStyle={true}
           ></WordSpeaker>
         </Toolbar>
-      </AppBar>
-      <Box className={classes.innerBox}>
+      </StyledAppBar>
+      <StyledBox>
         <LinkInterceptor
           html={word.content}
           onLinkClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
             e.preventDefault();
           }}
         ></LinkInterceptor>
-      </Box>
+      </StyledBox>
     </Dialog>
   );
 };

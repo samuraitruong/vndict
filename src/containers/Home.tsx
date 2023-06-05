@@ -1,96 +1,95 @@
-import React, { useState, FormEvent, useEffect, useCallback } from 'react';
+import React, { useState, FormEvent, useEffect, useCallback } from "react";
+import { styled } from "@mui/system";
 
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import SuggestionList from "components/SuggestionList";
 
-import SuggestionList from 'components/SuggestionList';
+import Typography from "@mui/material/Typography";
 
-import Typography from '@material-ui/core/Typography';
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
+import IconButton from "@mui/material/IconButton";
+import TextField from "@mui/material/TextField";
+import Divider from "@mui/material/Divider";
+import SnackbarContent from "@mui/material/SnackbarContent";
 
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import InputBase from '@material-ui/core/InputBase';
-import Divider from '@material-ui/core/Divider';
-import SnackbarContent from '@material-ui/core/SnackbarContent';
+import MenuIcon from "@mui/icons-material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
+import ToggleButton from "@mui/lab/ToggleButton";
+import ToggleButtonGroup from "@mui/lab/ToggleButtonGroup";
+import TranslateIcon from "@mui/icons-material/Translate";
+import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
+import AccountTreeIcon from "@mui/icons-material/AccountTree";
+import CloseIcon from "@mui/icons-material/Close";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
+import { LinkInterceptor } from "components/LinkInterceptor";
+import { useMatch, useNavigate } from "react-router";
+import { WordPopup } from "components/WordPopup/WordPopup";
+import { fetchWord } from "services/api";
+import { toProperCase } from "services/util";
+import constants from "../constants";
+import { Menu, MenuItem, Link } from "@mui/material";
+import { WordSpeaker } from "common/WordSpeaker/WordSpeaker";
+import LiveSearch from "components/LiveSearch/LiveSearch";
+import useSpeechInput from "hooks/useSpeechInput";
+import MicIcon from "@mui/icons-material/Mic";
+import { useAutocomplete } from "hooks/useAutoComplete";
+import { useDebounce } from "hooks/useDebounce";
 
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import TranslateIcon from '@material-ui/icons/Translate';
-import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
-import AccountTreeIcon from '@material-ui/icons/AccountTree';
-import CloseIcon from '@material-ui/icons/Close';
-import AutorenewIcon from '@material-ui/icons/Autorenew';
-import { LinkInterceptor } from 'components/LinkInterceptor';
-import { useParams, useHistory } from 'react-router';
-import { WordPopup } from 'components/WordPopup/WordPopup';
-import { fetchWord } from 'services/api';
-import { toProperCase } from 'services/util';
-import constants from '../constants';
-import { Menu, MenuItem, Link } from '@material-ui/core';
-import { WordSpeaker } from 'common/WordSpeaker/WordSpeaker';
-import LiveSearch from 'components/LiveSearch/LiveSearch';
-import useSpeechInput from 'hooks/useSpeechInput';
-import MicIcon from '@material-ui/icons/Mic';
-import { useAutocomplete } from 'hooks/useAutoComplete';
-import { useDebounce } from 'hooks/useDebounce';
-
-interface PageParams {
+interface PageParams extends Record<string, string> {
   word?: string;
 }
 interface DictData {}
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      padding: '2px 4px',
-      display: 'flex',
-      alignItems: 'center',
-      width: '100%',
-    },
-    input: {
-      marginLeft: theme.spacing(1),
-      flex: 1,
-    },
-    iconButton: {
-      padding: 10,
-    },
-    divider: {
-      height: 1,
-      marginTop: theme.spacing(1),
-    },
-    container: {
-      margin: theme.spacing(1, 0),
-      paddingTop: theme.spacing(2),
-    },
-    speakButton: {
-      marginLeft: theme.spacing(3),
-    },
-    snackbar: {
-      backgroundColor: theme.palette.error.dark,
-    },
-    autoComplete: {
-      margin: theme.spacing(1),
-    },
-  }),
-);
+
+const SnackbarContentStyled = styled(SnackbarContent)(({ theme }) => ({
+  backgroundColor: theme.palette.error.dark,
+}));
+
+const AutoCompleteLink = styled(Link)(({ theme }) => ({
+  margin: theme.spacing(1),
+}));
+const StyledDivider = styled(Divider)(({ theme }) => ({
+  height: 1,
+  marginTop: theme.spacing(1),
+}));
+
+const KeywordTextBox = styled(TextField)(({ theme }) => ({
+  marginLeft: theme.spacing(1),
+  flex: 1,
+}));
+
+const CustomIconButton = styled(IconButton)(({ theme }) => ({
+  padding: 10,
+}));
+
+const MainContainer = styled(Grid)(({ theme }) => ({
+  margin: theme.spacing(1, 0),
+  paddingTop: theme.spacing(2),
+}));
+
+const PaperRoot = styled(Paper)(({ theme }) => ({
+  padding: "2px 4px",
+  display: "flex",
+  alignItems: "center",
+  width: "100%",
+}));
 
 const Home: React.FC = () => {
-  const source = localStorage.getItem('SOURCE_ID') || 'html';
-  const speakAccents = ['uk', 'us'];
-  let history = useHistory();
-  const classes = useStyles({});
+  const source = localStorage.getItem("SOURCE_ID") || "html";
+  const speakAccents = ["uk", "us"];
+  const navigate = useNavigate();
   const [sourceId, setSourceId] = useState(source);
   const [data, setData] = useState<DictData>();
   const [popupWord, setPopupWord] = useState(null);
-  const [keyword, setKeyword] = useState('');
+  const [keyword, setKeyword] = useState("");
   const [suggestionList, setSuggestionList] = useState([]);
-  const [type, setType] = useState('en_vn');
+  const [type, setType] = useState("en_vn");
   const [message, setMessage] = useState(null);
-  const { word } = useParams<PageParams>();
+  const matchUrl = useMatch("/:word");
   const [liveSearch, setLiveSearch] = useState(true);
   const autocomplete = useDebounce(keyword, 500);
+  const { word } = matchUrl.params || {};
+  console.log("memem", word);
   const { autoCompleteItems, autoCompleteLoading, setAutoCompleteItems } =
     useAutocomplete(autocomplete);
 
@@ -98,40 +97,40 @@ const Home: React.FC = () => {
     async (inputKeyword: string) => {
       if (!inputKeyword) return;
       const { data, suggestions } = await fetchWord(inputKeyword, sourceId);
-
+      console.log(inputKeyword, data);
       if (data) {
         setLiveSearch(false);
-        setType('en_vn');
+        setType("en_vn");
         setData(data);
         setMessage(null);
-        history.push(inputKeyword);
+        navigate("/" + inputKeyword);
         window.scrollTo({ top: 0 });
       } else {
         setLiveSearch(true);
         setData({});
         setSuggestionList(suggestions);
         setMessage(
-          'Xin lỗi, từ bạn tìm kiếm không tồn tại hoặc chưa được cập nhật',
+          "Xin lỗi, từ bạn tìm kiếm không tồn tại hoặc chưa được cập nhật"
         );
       }
       setAutoCompleteItems([]);
     },
-    [history, sourceId, setAutoCompleteItems],
+    [navigate, sourceId, setAutoCompleteItems]
   );
   const onVoiceResultCb = useCallback(
-    (input) => {
+    (input: string) => {
       setKeyword(input);
       search(input);
     },
-    [search],
+    [search]
   );
   const voiceStartedCB = useCallback(() => {
-    setKeyword('');
+    setKeyword("");
   }, []);
 
   const { isBrowserSupportSpeech, startVoiceInput, started } = useSpeechInput(
     onVoiceResultCb,
-    voiceStartedCB,
+    voiceStartedCB
   );
   const onWordClick = async (clickedWord: string) => {
     const response = await fetchWord(clickedWord, sourceId);
@@ -140,6 +139,7 @@ const Home: React.FC = () => {
     }
   };
   useEffect(() => {
+    console.log("word changed");
     setKeyword(word);
     search(word);
   }, [word, search]);
@@ -147,7 +147,7 @@ const Home: React.FC = () => {
   const dict = data && (data as any)[type];
   const handleTypeChange = (
     event: React.MouseEvent<HTMLElement>,
-    dictType: string,
+    dictType: string
   ) => {
     setType(dictType);
   };
@@ -160,37 +160,36 @@ const Home: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleSourceMenuClick = (
-    event: React.MouseEvent<HTMLButtonElement>,
+    event: React.MouseEvent<HTMLButtonElement>
   ) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = (value?: string) => {
     if (constants.DATA_SOURCE_ID.some((x) => x === value)) {
-      localStorage.setItem('SOURCE_ID', value);
+      localStorage.setItem("SOURCE_ID", value);
       setSourceId(value);
     }
     setAnchorEl(null);
   };
   const reset = () => {
     setLiveSearch(true);
-    setKeyword('');
+    setKeyword("");
     setData(null);
-    history.push('/');
+    navigate("/");
   };
 
   return (
     <React.Fragment>
-      <Grid container className={classes.container}>
+      <MainContainer container>
         <Grid item sm={6} xs={12}>
           <form onSubmit={handleSubmit}>
-            <Paper className={classes.root}>
-              <IconButton
-                className={classes.iconButton}
-                aria-label='menu'
+            <PaperRoot>
+              <CustomIconButton
+                aria-label="menu"
                 onClick={handleSourceMenuClick}
               >
                 <MenuIcon />
-              </IconButton>
+              </CustomIconButton>
               <Menu
                 anchorEl={anchorEl}
                 keepMounted
@@ -198,55 +197,48 @@ const Home: React.FC = () => {
                 onClose={handleClose}
               >
                 <MenuItem
-                  disabled={sourceId === 'html'}
-                  onClick={() => handleClose('html')}
+                  disabled={sourceId === "html"}
+                  onClick={() => handleClose("html")}
                 >
                   Từ điển 1
                 </MenuItem>
                 <MenuItem
-                  disabled={sourceId === 'data'}
-                  onClick={() => handleClose('data')}
+                  disabled={sourceId === "data"}
+                  onClick={() => handleClose("data")}
                 >
                   Từ điển 2
                 </MenuItem>
               </Menu>
-              <InputBase
+              <KeywordTextBox
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
-                className={classes.input}
                 placeholder={
-                  started ? 'Nói từ muốn tìm kiếm' : 'Nhập từ muốn tìm'
+                  started ? "Nói từ muốn tìm kiếm" : "Nhập từ muốn tìm"
                 }
-                inputProps={{ 'aria-label': 'English -> Vietnamese' }}
+                inputProps={{ "aria-label": "English -> Vietnamese" }}
               />
               {isBrowserSupportSpeech && (
-                <IconButton
+                <CustomIconButton
                   disabled={started}
                   onClick={() => startVoiceInput()}
-                  className={classes.iconButton}
-                  aria-label='voice input'
+                  aria-label="voice input"
                 >
-                  <MicIcon color={started ? 'secondary' : 'inherit'} />
-                </IconButton>
+                  <MicIcon color={started ? "secondary" : "inherit"} />
+                </CustomIconButton>
               )}
 
-              <IconButton
-                type='submit'
-                className={classes.iconButton}
-                aria-label='search'
-              >
+              <CustomIconButton type="submit" aria-label="search">
                 <SearchIcon />
-              </IconButton>
-              <Divider className={classes.divider} orientation='vertical' />
-              <IconButton
-                color='primary'
-                className={classes.iconButton}
-                aria-label='directions'
+              </CustomIconButton>
+              <StyledDivider orientation="vertical" />
+              <CustomIconButton
+                color="primary"
+                aria-label="directions"
                 onClick={reset}
               >
                 <AutorenewIcon />
-              </IconButton>
-            </Paper>
+              </CustomIconButton>
+            </PaperRoot>
           </form>
         </Grid>
 
@@ -256,16 +248,16 @@ const Home: React.FC = () => {
               value={type}
               exclusive
               onChange={handleTypeChange}
-              style={{ float: 'right' }}
-              aria-label='select dictionary options'
+              style={{ float: "right" }}
+              aria-label="select dictionary options"
             >
-              <ToggleButton value='en_vn' aria-label='left aligned'>
-                <TranslateIcon></TranslateIcon> {'Eng -> Vi'} &nbsp;
+              <ToggleButton value="en_vn" aria-label="left aligned">
+                <TranslateIcon></TranslateIcon> {"Eng -> Vi"} &nbsp;
               </ToggleButton>
-              <ToggleButton value='en_en' aria-label='centered'>
-                <SwapHorizIcon /> {'Eng -> Eng'} &nbsp;
+              <ToggleButton value="en_en" aria-label="centered">
+                <SwapHorizIcon /> {"Eng -> Eng"} &nbsp;
               </ToggleButton>
-              <ToggleButton value='synonyms' aria-label='right aligned'>
+              <ToggleButton value="synonyms" aria-label="right aligned">
                 <AccountTreeIcon /> Đồng Nghĩa
               </ToggleButton>
             </ToggleButtonGroup>
@@ -275,32 +267,31 @@ const Home: React.FC = () => {
           {autoCompleteLoading && <span>Loading....</span>}
           {autoCompleteItems.length > 0 &&
             autoCompleteItems.map((x) => (
-              <Link
+              <AutoCompleteLink
                 key={x}
-                color='primary'
+                color="primary"
                 href={x}
-                className={classes.autoComplete}
                 onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
                   e.preventDefault();
                   search(x);
                 }}
               >
                 {x}
-              </Link>
+              </AutoCompleteLink>
             ))}
         </Grid>
-      </Grid>
+      </MainContainer>
       {dict && (
         <Grid>
           <Grid xs={12} item>
-            <Typography variant='h3' component='span'>
-              {dict.data ? toProperCase(dict.data.word) : ''}
+            <Typography variant="h3" component="span">
+              {dict.data ? toProperCase(dict.data.word) : ""}
             </Typography>
-            <Typography variant='h4' component='span'>
-              <Box color='text.secondary' component='span'>
+            <Typography variant="h4" component="span">
+              <Box color="text.secondary" component="span">
                 {dict.data && dict.data.pronounce
                   ? `  (${dict.data.pronounce})`
-                  : ''}
+                  : ""}
               </Box>
             </Typography>
             <WordSpeaker
@@ -308,13 +299,13 @@ const Home: React.FC = () => {
               accents={speakAccents}
               noStyle={false}
             ></WordSpeaker>
-            <Divider className={classes.divider} />
+            <StyledDivider />
             <LinkInterceptor
               html={dict.data && dict.data.content}
               onWordClick={onWordClick}
               onLinkClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
                 e.preventDefault();
-                const arr = e.currentTarget.href.split('/');
+                const arr = e.currentTarget.href.split("/");
                 const word = arr[arr.length - 1];
                 setKeyword(word);
                 search(word);
@@ -340,11 +331,10 @@ const Home: React.FC = () => {
       )}
 
       {message && (
-        <SnackbarContent
-          className={classes.snackbar}
+        <SnackbarContentStyled
           message={
             <React.Fragment>
-              <Typography variant='subtitle2'>{message}</Typography>
+              <Typography variant="subtitle2">{message}</Typography>
 
               {suggestionList && suggestionList.length > 0 && (
                 <React.Fragment>
@@ -352,27 +342,27 @@ const Home: React.FC = () => {
                   {suggestionList.map((x) => (
                     <Link
                       key={x}
-                      style={{ color: '#fff', cursor: 'pointer' }}
+                      style={{ color: "#fff", cursor: "pointer" }}
                       onClick={() => search(x)}
                     >
                       {x}
                     </Link>
-                  ))}{' '}
+                  ))}{" "}
                 </React.Fragment>
               )}
             </React.Fragment>
           }
           action={
-            <IconButton
-              key='close'
-              aria-label='close'
-              color='inherit'
+            <CustomIconButton
+              key="close"
+              aria-label="close"
+              color="inherit"
               onClick={() => setMessage(null)}
             >
               <CloseIcon />
-            </IconButton>
+            </CustomIconButton>
           }
-        ></SnackbarContent>
+        ></SnackbarContentStyled>
       )}
       {liveSearch && (
         <LiveSearch

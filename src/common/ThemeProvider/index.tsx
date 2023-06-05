@@ -1,22 +1,19 @@
-import React from "react"
+import React from "react";
 
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
-import CssBaseline from "@material-ui/core/CssBaseline"
+import { ThemeProvider, createTheme } from "@mui/material";
 
-const theme = createMuiTheme()
+// import CssBaseline from "@mui/material/CssBaseline";
 
-const Theme: React.FC = ({ children }) => {
-  return (
-    <>
-      <CssBaseline />
-      <ThemeProvider theme={theme}>
-        {children}
-      </ThemeProvider>
-    </>
-  )
+const theme = createTheme({});
+
+export interface ThemeProviderProps {
+  children: React.ReactNode;
 }
 
-export default Theme
+const Theme: React.FC<ThemeProviderProps> = ({
+  children,
+}: ThemeProviderProps) => {
+  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+};
 
-
-
+export default Theme;
