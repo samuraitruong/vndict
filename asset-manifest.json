@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/vndict/static/css/main.56664df0.css",
-    "main.js": "/vndict/static/js/main.ab962574.js",
+    "main.js": "/vndict/static/js/main.c504cb27.js",
     "index.html": "/vndict/index.html",
     "main.56664df0.css.map": "/vndict/static/css/main.56664df0.css.map",
-    "main.ab962574.js.map": "/vndict/static/js/main.ab962574.js.map"
+    "main.c504cb27.js.map": "/vndict/static/js/main.c504cb27.js.map"
   },
   "entrypoints": [
     "static/css/main.56664df0.css",
-    "static/js/main.ab962574.js"
+    "static/js/main.c504cb27.js"
   ]
 }
